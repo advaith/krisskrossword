@@ -1,0 +1,13 @@
+TODO LIST:
+
+- refactor to make this make any sense at all
+- adding friends + privacy 
+- ui + popup for diff stats
+- external (or not who knows really) database
+- switching from click based add to continuous monitoring
+- computation of stats
+- automatic scraping of old puzzles solved
+- decentralization
+- make key/value storage relevant to above tasks
+- chrome store
+- clean up code l o l 
