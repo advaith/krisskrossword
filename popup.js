@@ -13,25 +13,32 @@ function scrapeThePage() {
     var completed = 0;
     if (finishedStatus) {
     	completed = 1;
+    	var key = String(document.URL).substring(46)
+    	var key_completed = key + "_completed"
+    	var key_time = key + "_time"
+    	console.log("THE KEY IS")
+    	console.log(key)
 	    var timeStatus = document.querySelector("div.timer-count").textContent;
 	    console.log("this should be timestatus")
 	    console.log(timeStatus)
-	    chrome.storage.sync.set({'asdf': completed}, function () {});
-	    chrome.storage.sync.set({'sdfg': timeStatus}, function () {});
+	    completed_obj = {};
+	    completed_obj[key_completed] = completed
+	    time_obj = {};
+	    time_obj[key_time] = timeStatus
+	    chrome.storage.sync.set(completed_obj, function () {});
+	    chrome.storage.sync.set(time_obj, function () {});
     }
-
-    // get data and day and make informative key instead of a
 };	
 
 (function () {
     chrome.storage.onChanged.addListener(function (changes,areaName) {
-    	console.log("New thing in storage",changes.asdf.newValue);
-        console.log("New item in storage",changes.sdfg);
+    	
+    	// console.log("New thing in storage",changes.asdf.newValue);
+     //    console.log("New item in storage",changes.sdfg);
     })
 })();
 
 changeColor.onclick = function(element) {
-	console.log("ok ya")
 	let color = element.target.value;
 	const scriptToExec = `(${scrapeThePage})()`;
 	console.log(scriptToExec)

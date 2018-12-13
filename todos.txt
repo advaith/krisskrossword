@@ -1,13 +1,19 @@
 TODO LIST:
+V 0.0
+- (1) set up external database - potentially w/ firebase 
+- (2) write requests layer to/from database
+- (3) integrate existing code with requests layer for db
+- (4) crawl and print all scores for a given day 
+- (4.5) switching from click based add to continuous monitoring
+- (5) adding friends + privacy 
 
-- refactor to make this make any sense at all
-- adding friends + privacy 
+V 0.1
 - ui + popup for diff stats
-- external (or not who knows really) database
-- switching from click based add to continuous monitoring
 - computation of stats
 - automatic scraping of old puzzles solved
-- decentralization
-- make key/value storage relevant to above tasks
-- chrome store
-- clean up code l o l 
+- (Almost Eventually) refactor + clean up code to make this make any sense at all
+- (Eventually) chrome store
+
+- Think of name
+- Update repo with name
+- Update variables to reflect new name
