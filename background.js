@@ -40,19 +40,40 @@ window.onload = function() {
 };
 
 
-// I don't know if this is still necessary
-chrome.runtime.onInstalled.addListener(function() {
- chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
-      chrome.declarativeContent.onPageChanged.addRules([{
-        conditions: [new chrome.declarativeContent.PageStateMatcher({
-          pageUrl: {urlContains: 'nytimes.com/crosswords'},
-        })
-        ],
-            actions: [new chrome.declarativeContent.ShowPageAction()]
-      }]);
-    });
+// Database read functions
+function getUsersTime(userIds, day, date){
+  // Function to aggregate stats from list of friends (stored in userIds)
+}
+
+function getUserTime(userId, day, date) {
+  // Function to get specific day's time for a given user
+  var ref = firebase.database().ref(userId + '/' + day + '/' + date);
+  ref.on("value", function(snapshot) {
+     console.log(snapshot.val()['time']);
+  }, function (error) {
+     console.log("Error: " + error.code);
   });
-document.getElementById("div.Toolbar-resetButton--1bkIx").addEventListener("touchend", touchHandler, false);
+}
+
+function getUserDayStats(userId, day) {
+  var ref = firebase.database().ref(userId + '/' + day);
+  ref.on("value", function(snapshot) {
+    console.log(snapshot.val());
+    // Iterate over all elements in snapshot.val()
+    // Compute average/improvement
+    // Construct popup histogram
+  }, function (error) {
+     console.log("Error: " + error.code);
+  });
+}
+// Friend add 
+function addFriend(userId) {
+  // Add a Firebase child-added listener to the node for that userId
+  //    Do we want to store all of your friends' data in chrome.local.storage, or do we want 
+  //    the popup to poll for it (aka pull the necessary data every time you click a certain
+  //    part of the popup?
+  //    I'm in favor of the read-as-requested - less clunky + firebase is known for fast reads?
+}
 
 
 

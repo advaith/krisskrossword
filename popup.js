@@ -2,17 +2,20 @@
 function scrapeThePage() {
 	console.log("huhhasfhlhsdf");
     var visited = window.location.href;
+
+    // TODO: switch these queries to regexes
     var finishedStatus = document.querySelector("div.Toolbar-resetButton--1bkIx");
     var completed = 0;
     if (finishedStatus) {
     	completed = 1;
     	var key = String(document.URL).substring(46)
 	    var timeStatus = document.querySelector("div.timer-count").textContent;
+	    var day = document.querySelector("div.PuzzleDetails-date--1HNzj").children[0].textContent.slice(0, -1);
 	    console.log("this should be timestatus")
 	    console.log(timeStatus)
 
 	    // Send object to database
-	    chrome.runtime.sendMessage({date: key, time: timeStatus});
+	    chrome.runtime.sendMessage({date: key, time: timeStatus, day: day});
     }
 };	
 
@@ -41,18 +44,17 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     console.log(message['time']);
     var uid = firebase.auth().currentUser.uid;
     var name = firebase.auth().currentUser.displayName;
-    writeUserData(uid, name, message['date'], message['time']);
+    writeUserData(uid, message['day'], message['date'], message['time']);
 });
 
 
 // Database write
 // User information --> database entry
-function writeUserData(userId, name, date, time) {
+function writeUserData(userId, day, date, time) {
   // Argument passed into ref is the path to the database 'file' that you're writing with this info
   // Should reflect predetermined database schema 
-  firebase.database().ref('users/' + userId).set({
-	    username: name,
-	    date: date,
+  var date_path = date.split("/").join("");
+  firebase.database().ref(userId + "/" + day + "/" + date_path).set({
 	    time: time
   });
   console.log("Finished writing to firebase");

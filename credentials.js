@@ -34,6 +34,14 @@ function initApp() {
       var isAnonymous = user.isAnonymous;
       var uid = user.uid;
       var providerData = user.providerData;
+
+      firebase.database().ref('/users/' + user.uid).set({
+        name: displayName,
+        email: email,
+        photoURL: photoURL,
+        emailVerified: emailVerified
+      });
+
       // [START_EXCLUDE]
       document.getElementById('quickstart-button').textContent = 'Sign out';
       document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
