@@ -1,8 +1,4 @@
-let changeColor = document.getElementById('changeColor');
-let finishedStatus = document.querySelector("div.Toolbar-resetButton--1bkIx");
-console.log(finishedStatus)
-
-
+// Content script code - should be moved to a separate js file that listens for existence of native DOM elements
 function scrapeThePage() {
 	console.log("huhhasfhlhsdf");
     var visited = window.location.href;
@@ -11,34 +7,21 @@ function scrapeThePage() {
     if (finishedStatus) {
     	completed = 1;
     	var key = String(document.URL).substring(46)
-    	var key_completed = key + "_completed"
-    	var key_time = key + "_time"
-    	console.log("THE KEY IS")
-    	console.log(key)
 	    var timeStatus = document.querySelector("div.timer-count").textContent;
 	    console.log("this should be timestatus")
 	    console.log(timeStatus)
-	    completed_obj = {};
-	    completed_obj[key_completed] = completed
-	    time_obj = {};
-	    time_obj[key_time] = timeStatus
 
 	    // Send object to database
 	    chrome.runtime.sendMessage({date: key, time: timeStatus});
-	    chrome.storage.sync.set(completed_obj, function () {});
-	    chrome.storage.sync.set(time_obj, function () {});
     }
 };	
 
-(function () {
-    chrome.storage.onChanged.addListener(function (changes,areaName) {
-    	
-    	// console.log("New thing in storage",changes.asdf.newValue);
-     //    console.log("New item in storage",changes.sdfg);
-    })
-})();
 
-changeColor.onclick = function(element) {
+let report = document.getElementById('report');
+
+// Report button listener
+// Injects scraping content script upon click
+report.onclick = function(element) {
 	let color = element.target.value;
 	const scriptToExec = `(${scrapeThePage})()`;
 	console.log(scriptToExec)
@@ -51,22 +34,26 @@ changeColor.onclick = function(element) {
 	});
 };
 
+// Background message listener
+// Listens for message from content script + sends to database
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-    alert("message received");
     console.log(message['date']);
     console.log(message['time']);
     var uid = firebase.auth().currentUser.uid;
     var name = firebase.auth().currentUser.displayName;
-    writeUserData(uid, name, message['date'], message['time'])
-    console.log("message received");
+    writeUserData(uid, name, message['date'], message['time']);
 });
 
 
+// Database write
+// User information --> database entry
 function writeUserData(userId, name, date, time) {
+  // Argument passed into ref is the path to the database 'file' that you're writing with this info
+  // Should reflect predetermined database schema 
   firebase.database().ref('users/' + userId).set({
 	    username: name,
 	    date: date,
 	    time: time
   });
-  console.log("written to the database???");
+  console.log("Finished writing to firebase");
 }

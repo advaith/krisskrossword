@@ -1,0 +1,52 @@
+12.19.2018
+--
+(documentation on changes and thoughts)
+
+https://howtofirebase.com/firebase-data-modeling-939585ade7f4
+^ helpful for thinking about how to structure database; i'm thinking the following schema could be scalable to our queries:
+
+{ 
+  // list of users
+  users: {
+	user1: {
+		// user specific details - name, email, # of times they've signed on, etc 
+	},
+	user2: {
+
+	}
+  },
+
+  // list of user directories
+  user1: {
+  	monday: {
+  		*date*: {
+  			time: 
+  			completed:
+  			checks_used:
+  		}
+  	},
+  	tuesday: {
+
+  	},
+  	...,
+  	sunday: {
+
+  	}
+  },
+  user2: {
+
+  }
+}
+
+firebase has nice functions for:
+	1) listening for changes in certain nodes - this just means listening for a childAdded event on any of your friends nodes
+	2) querying across entire nodes - getting a user's average time across mondays would be one line
+
+changes: 
+* writing to the database in popup.js, in the writeUserData function
+	- overwrites the same path each time, gotta change it based on the schema if u think this makes sense
+* credentials.js & background.js handle the google sign-in, which gives us a UID to store user data under
+*  hanges to manifest json 
+	1) whitelist website requests using the Content Policy Directive
+	2) include our OAuth information
+	3) include the app public key 

@@ -15,13 +15,7 @@
         "48": "images/get_started48.png",
         "128": "images/get_started128.png"
       }
-    },	
-    "content_scripts": [
-    	{
-    		"matches": ["https://*/*/"],
-    		"js": ["script.js"]
-    	}
-    ],
+    },
     "icons": {
       "16": "images/get_started16.png",
       "32": "images/get_started32.png",
@@ -31,13 +25,11 @@
     "manifest_version": 2,
     "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
     "oauth2": {
-      // TODO(DEVELOPER): Change the line below to the OAuth Client ID you created as described in https://developer.chrome.com/apps/app_identity#google
       "client_id": "115024908254-iq0458o0l7r2lg7oktabjel0of11rlcq.apps.googleusercontent.com",
       "scopes": [
         "https://www.googleapis.com/auth/userinfo.email",
         "https://www.googleapis.com/auth/userinfo.profile"
       ]
     },
-    // TODO(DEVELOPER): Change the line below to your Chrome Extension's public key as described in https://developer.chrome.com/apps/app_identity#google
     "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoasG3hPWu2vnulDC/AsWc+u7tQ81dyzwzEEdmAhgb4Nm8M3tl5aWb7nsuzqh8wmLqLe4afXbP+I5ISQaHSruk37cOzx69kG1+pm+D35445xERZh+d8DQYT3JNnNINz0QNTVMHkqTjefcKY7gsdmjpQQJRgCg/bsWUyuxDssjZxiHFunoAvy0eV7gYYovc7MiP8HiYn8/lMKI+/4KfGDG0CnozSsTjbDxofNtwmrmKrcrxY+5sL2Rb5YLXR1znObFelBFuLmymjUpZzsNH5OrMAV4O8UPzJQ379hoUiFLahEEeZCY+UBFgi9shg2rN+JC9pK+63scw1bZhDQQkKZHpQIDAQAB"
 }

@@ -6,6 +6,10 @@ V 0.0
 - (4) crawl and print all scores for a given day 
 - (4.5) switching from click based add to continuous monitoring
 - (5) adding friends + privacy 
+	- involves adding a friends variable in chrome local storage
+	- set up a firebase listener for when friend nodes - using their UIDs - have changed in the database
+	- can probalby update whenever the popup is clicked
+- (6) integrate with downforacross
 
 V 0.1
 - ui + popup for diff stats
@@ -17,3 +21,5 @@ V 0.1
 - Think of name
 - Update repo with name
 - Update variables to reflect new name
+
+
