@@ -1,6 +1,3 @@
-chrome.storage.local.clear();
-
-
 let changeColor = document.getElementById('changeColor');
 let finishedStatus = document.querySelector("div.Toolbar-resetButton--1bkIx");
 console.log(finishedStatus)
@@ -25,6 +22,9 @@ function scrapeThePage() {
 	    completed_obj[key_completed] = completed
 	    time_obj = {};
 	    time_obj[key_time] = timeStatus
+
+	    // Send object to database
+	    chrome.runtime.sendMessage({date: key, time: timeStatus});
 	    chrome.storage.sync.set(completed_obj, function () {});
 	    chrome.storage.sync.set(time_obj, function () {});
     }
@@ -50,3 +50,23 @@ changeColor.onclick = function(element) {
 	      {code: scriptToExec});
 	});
 };
+
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+    alert("message received");
+    console.log(message['date']);
+    console.log(message['time']);
+    var uid = firebase.auth().currentUser.uid;
+    var name = firebase.auth().currentUser.displayName;
+    writeUserData(uid, name, message['date'], message['time'])
+    console.log("message received");
+});
+
+
+function writeUserData(userId, name, date, time) {
+  firebase.database().ref('users/' + userId).set({
+	    username: name,
+	    date: date,
+	    time: time
+  });
+  console.log("written to the database???");
+}
