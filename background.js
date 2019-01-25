@@ -1,17 +1,18 @@
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
 'use strict';
 
 var config = {
   apiKey: "AIzaSyBtg_XwhjCpftSfjJDM-ET1Ei9iLp4-ZKM",
-  databaseURL: "krisskrossword.firebaseapp.com",
+  databaseURL: "krisskrossword.firebaseio.com",
   storageBucket: "krisskrossword.appspot.com"
 };
+console.log(firebase)
 firebase.initializeApp(config);
-var database = firebase.database();
-var userId = firebase.auth().currentUser.uid;
+// var database = firebase.database();
+// console.log(database)  
+// var userId = firebase.auth().currentUser.uid;
 
 
 /**
@@ -37,7 +38,23 @@ function initApp() {
 
 window.onload = function() {
   initApp();
-};
+};  
+
+chrome.runtime.onInstalled.addListener(function() {
+  // chrome.storage.sync.set({color: '#3aa757'}, function() {
+  //   // console.log("The color is green.");
+  // });
+ chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
+      chrome.declarativeContent.onPageChanged.addRules([{
+        conditions: [new chrome.declarativeContent.PageStateMatcher({
+          pageUrl: {urlContains: 'nytimes.com/crosswords'},
+        })
+        ],
+            actions: [new chrome.declarativeContent.ShowPageAction()]
+      }]);
+    });
+  });
+
 
 
 // Database read functions
