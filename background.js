@@ -83,14 +83,7 @@ function getUserDayStats(userId, day) {
      console.log("Error: " + error.code);
   });
 }
-// Friend add 
-function addFriend(userId) {
-  // Add a Firebase child-added listener to the node for that userId
-  //    Do we want to store all of your friends' data in chrome.local.storage, or do we want 
-  //    the popup to poll for it (aka pull the necessary data every time you click a certain
-  //    part of the popup?
-  //    I'm in favor of the read-as-requested - less clunky + firebase is known for fast reads?
-}
+
 
 
 

@@ -16,7 +16,6 @@
   <h3>this is it - our UI </h3>
 
     <button id="report">report score</button>
-    <script src="popup.js"></script>
 
 
   <div class="quickstart-user-details-container">
@@ -26,7 +25,18 @@
       <div>Firebase auth <code>currentUser</code> object value:</div>
       <pre><code id="quickstart-account-details">null</code></pre>
     </p>
+    <form>
+      <div>
+        <label for="add_friend_text">Add a friend: </label>
+        <input type="text" id="add_friend_text" name="friend_u_name">
+      </div>
+      <div>
+        <button id="add_friend_button">Submit</button>
+      </div>
+    </form>
   </div>
+    <script src="popup.js"></script>
+
 
   </body>
 </html>
