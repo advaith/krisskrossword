@@ -1,15 +1,15 @@
 TODO LIST:
 V 0.0
-- (1) set up external database - potentially w/ firebase 
-- (2) write requests layer to/from database
-- (3) integrate existing code with requests layer for db
-- (4) crawl and print all scores for a given day 
-- (4.5) switching from click based add to continuous monitoring
-- (5) adding friends + privacy 
-	- involves adding a friends variable in chrome local storage
+- (1) set up external database - potentially w/ firebase <DONE>
+- (2) write requests layer to/from database <DONE> 
+- (3) integrate existing code with requests layer for db <DONE>
+- (4) adding friends + privacy 
+	- involves adding a friends variable in chrome local storage <DONE> 
 	- set up a firebase listener for when friend nodes - using their UIDs - have changed in the database
-	- can probalby update whenever the popup is clicked
-- (6) integrate with downforacross
+	- can probably update whenever the popup is clicked
+- (5) crawl and print all scores for a given day 
+- (6) switching from click based add to continuous monitoring
+
 
 V 0.1
 - ui + popup for diff stats
@@ -17,6 +17,8 @@ V 0.1
 - automatic scraping of old puzzles solved
 - (Almost Eventually) refactor + clean up code to make this make any sense at all
 - (Eventually) chrome store
+- Integrate with downforacross
+
 
 - Think of name
 - Update repo with name

@@ -95,12 +95,18 @@ function writeUserFriend(userId, friendId) {
   console.log("tryna write user friend")
   // Argument passed into ref is the path to the database 'file' that you're writing with this info
   // Should reflect predetermined database schema 
-  firebase.database().ref(userId + "/friends/" + friendId).set({
+  firebase.database().ref("/users/" + userId + "/friends/" + friendId).set({
       value: 1
   });
   console.log("Finished writing to firebase");
 }
 
+function readUserData(userId, day, date, time) {
+  var date_path = date.split("/").join("");
+  firebase.database().ref(userId + "/" + day + "/" + date_path).on( 'value', function(snapshot) {
+    return snapshot.val();
+  });
+}
 // function writeData(key, value_name, value) {
 //   // Argument passed into ref is the path to the database 'file' that you're writing with this info
 //   // Should reflect predetermined database schema 
