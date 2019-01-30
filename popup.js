@@ -134,15 +134,6 @@ let friendscores = document.getElementById('get_friend_score');
 // Injects scraping content script upon click
 function getFriendsData(userID, day, date) {
 
- // const scriptToExec = `(${scrapeThePage})()`;
- //  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
- //     // console.log(tabs[0]);
- //     // console.log()
- //     chrome.tabs.executeScript(
- //        tabs[0].id,
- //        {code: scriptToExec});
- //  });
-
   var ref = firebase.database()
 
   var friends = getFriendsList(userID) // this might be async?!?!?!?!?!?!!?
@@ -157,8 +148,6 @@ function getFriendsData(userID, day, date) {
     })
     return Promise.all(friendPromises)
   }).then(function(friendIdsList) {
-    // console.log("THIS IS THE FRIEND LIST")
-    // console.log(friendIdsList)
     var friendScorePromises = []
     friendIdsList.forEach(function(friendId) {
       friendScorePromises.push(getScoreFromId(friendId, date, day))
@@ -168,6 +157,7 @@ function getFriendsData(userID, day, date) {
   }).then(function(friendScores) {
     console.log("GOT THE FRIEND SCORES!!!!!!!!!!!!!!!!!")
     console.log(friendScores)
+    document.getElementById('friend-score-details').textContent = "Friend Scores: " + JSON.stringify(friendScores, null, '  ');
     return friendScores
   }).catch(function (err) {
     console.log('err!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', err);
