@@ -44,7 +44,6 @@ let report = document.getElementById('report');
 report.onclick = function(element) {
 	let color = element.target.value;
 	const scriptToExec = `(${scrapeThePage})()`;
-	console.log(scriptToExec)
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 	   console.log(tabs[0]);
 	   // console.log()
@@ -68,6 +67,42 @@ add_friend_button.onclick = function(element) {
   add_friend_text.value = ""
 };
 
+
+
+
+
+function getFriendsList(userId) {
+  console.log("called getfriendslist")
+  var ref = firebase.database()
+  // var newRoot = ref.child('friends/'+ userId)
+  var rootRef = firebase.database().ref('friends');
+  var newRoot = rootRef.child(userId);
+  return newRoot.once('value').then(function(snapshot){
+      friends = [];
+      snapshot.forEach(function(_child){
+          var friend_name = _child.key;
+          friends.push(friend_name + "@gmail.com");
+      });
+      console.log("about to return getfriendslist")
+      return friends;
+  });
+}
+
+function getIdFromFriend(friendEmail) {
+  var ref = firebase.database()
+  var rootRef = firebase.database().ref('users');
+  return rootRef.orderByChild('email').equalTo(friendEmail).on("child_added", function(snapshot) {
+        return snapshot.key;
+  });
+}
+
+function getScoreFromId(friendId, date, day) {
+  var rootRef = firebase.database().ref(friendId + "/" + day + "/" + date);
+  return rootRef.on("value").then(function(snapshot) {
+    return snapshot.val()
+  });
+}
+
 // Background message listener
 // Listens for message from content script + sends to database
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
@@ -76,8 +111,48 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     var uid = firebase.auth().currentUser.uid;
     var name = firebase.auth().currentUser.displayName;
     writeUserData(uid, message['day'], message['date'], message['time']);
+    getFriendsData(uid, message['day'], message['date'])
 });
 
+// Get friends scores
+let friendscores = document.getElementById('get_friend_score');
+
+// Report button listener
+// Injects scraping content script upon click
+function getFriendsData(userID, day, date) {
+
+ const scriptToExec = `(${scrapeThePage})()`;
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+     console.log(tabs[0]);
+     // console.log()
+     chrome.tabs.executeScript(
+        tabs[0].id,
+        {code: scriptToExec});
+  });
+
+  var ref = firebase.database()
+
+  var friends = getFriendsList(userID) // this might be async?!?!?!?!?!?!!?
+  console.log(friends)
+  var friend_scores = {}
+  friends.then(function(friendList) {
+    console.log(friendList)
+    var friendPromises = []
+    friendList.forEach(function(friendEmail) { 
+      friendPromises.push(getIdFromFriend(friendEmail))
+    })
+    return Promise.all(friendPromises)
+  }).then(function(friendIdsList) {
+    console.log(friendIdsList)
+    var friendScorePromises = []
+    friendIdsList.forEach(function(friendId) {
+      friendScorePromises.push(getScoreFromId(friendId, date))
+    })
+    return Promise.all(friendScorePromises)
+  }).then(function(friendScores) {
+    console.log(friendScores)
+  })
+}
 
 // Database write
 // User information --> database entry
@@ -92,10 +167,11 @@ function writeUserData(userId, day, date, time) {
 }
 
 function writeUserFriend(userId, friendId) {
+  // NOTE - cant save periods so must just use gmail
   console.log("tryna write user friend")
   // Argument passed into ref is the path to the database 'file' that you're writing with this info
   // Should reflect predetermined database schema 
-  firebase.database().ref("/users/" + userId + "/friends/" + friendId).set({
+  firebase.database().ref("/friends/" + userId + "/" + friendId).update({
       value: 1
   });
   console.log("Finished writing to firebase");
