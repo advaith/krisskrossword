@@ -16,6 +16,7 @@ function scrapeThePage() {
 
 	    // Send object to database
 	    chrome.runtime.sendMessage({date: key, time: timeStatus, day: day});
+      return;
     }
 };	
 
@@ -105,11 +106,13 @@ function getIdFromFriend(friendEmail) {
 function getScoreFromId(friendId, date, day) {
   // console.log("frinedID IS")
   // console.log(friendId)
-  var rootRef = firebase.database().ref(friendId + "/" + day + "/" + date);
+   var date_path = date.split("/").join("");
+
+  var rootRef = firebase.database().ref(friendId + "/" + day + "/" + date_path);
   return rootRef.once("value").then(function(snapshot) {
     console.log("the snapshot val is:::::::::::")
     console.log(snapshot.val())
-    return snapshot.val()
+    return snapshot.val()["time"]
   });
 }
 
@@ -131,14 +134,14 @@ let friendscores = document.getElementById('get_friend_score');
 // Injects scraping content script upon click
 function getFriendsData(userID, day, date) {
 
- const scriptToExec = `(${scrapeThePage})()`;
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-     // console.log(tabs[0]);
-     // console.log()
-     chrome.tabs.executeScript(
-        tabs[0].id,
-        {code: scriptToExec});
-  });
+ // const scriptToExec = `(${scrapeThePage})()`;
+ //  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+ //     // console.log(tabs[0]);
+ //     // console.log()
+ //     chrome.tabs.executeScript(
+ //        tabs[0].id,
+ //        {code: scriptToExec});
+ //  });
 
   var ref = firebase.database()
 
@@ -150,13 +153,8 @@ function getFriendsData(userID, day, date) {
     console.log(friendList)
     var friendPromises = []
     friendList.forEach(function(friendEmail) { 
-      // console.log("in the for loop, this is the friendEmail")
-      // console.log(friendEmail)
       friendPromises.push(getIdFromFriend(friendEmail))
-
     })
-    console.log("pushing to friendPromises")
-    console.log(friendPromises)
     return Promise.all(friendPromises)
   }).then(function(friendIdsList) {
     // console.log("THIS IS THE FRIEND LIST")
@@ -168,8 +166,12 @@ function getFriendsData(userID, day, date) {
     console.log(friendScorePromises)
     return Promise.all(friendScorePromises)
   }).then(function(friendScores) {
+    console.log("GOT THE FRIEND SCORES!!!!!!!!!!!!!!!!!")
     console.log(friendScores)
-  })
+    return friendScores
+  }).catch(function (err) {
+    console.log('err!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', err);
+  });
 }
 
 // Database write
