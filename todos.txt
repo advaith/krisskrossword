@@ -11,7 +11,7 @@ V 0.0
 - (5.5) Add exception handling for when your friends dont have scores!
 - (6) switching from click based add to continuous monitoring
 - (7) Monitor for checks
-- (8) Show all user data for a day (average score, percentiles, etc.)
+- (8) Show all user data for a day (average score, percentiles, etc.)!
 
 
 V 0.1
@@ -21,7 +21,7 @@ V 0.1
 - (Almost Eventually) refactor + clean up code to make this make any sense at all
 - (Eventually) chrome store
 - Integrate with downforacross
-
+- Potentially shift UI to being on the crossword page itself
 
 - Think of name
 - Update repo with name
