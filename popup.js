@@ -83,7 +83,7 @@ function getFriendsList(userId) {
           var friend_name = _child.key;
           friends.push(friend_name + "@gmail.com");
       });
-      console.log("about to return getfriendslist")
+      // console.log("about to return getfriendslist")
       return friends;
   });
 }
@@ -91,14 +91,24 @@ function getFriendsList(userId) {
 function getIdFromFriend(friendEmail) {
   var ref = firebase.database()
   var rootRef = firebase.database().ref('users');
-  return rootRef.orderByChild('email').equalTo(friendEmail).on("child_added", function(snapshot) {
-        return snapshot.key;
+  return rootRef.orderByChild('email').equalTo(friendEmail).once("value").then(function(snapshot) {
+        // console.log(snapshot)
+        var answer = []
+        // console.log(snapshot.ref.parent)
+        snapshot.forEach((function(child) { answer.push(child.key) })) 
+
+        return answer[0]
+        // return snapshot.key;
   });
 }
 
 function getScoreFromId(friendId, date, day) {
+  // console.log("frinedID IS")
+  // console.log(friendId)
   var rootRef = firebase.database().ref(friendId + "/" + day + "/" + date);
-  return rootRef.on("value").then(function(snapshot) {
+  return rootRef.once("value").then(function(snapshot) {
+    console.log("the snapshot val is:::::::::::")
+    console.log(snapshot.val())
     return snapshot.val()
   });
 }
@@ -106,8 +116,8 @@ function getScoreFromId(friendId, date, day) {
 // Background message listener
 // Listens for message from content script + sends to database
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-    console.log(message['date']);
-    console.log(message['time']);
+    // console.log(message['date']);
+    // console.log(message['time']);
     var uid = firebase.auth().currentUser.uid;
     var name = firebase.auth().currentUser.displayName;
     writeUserData(uid, message['day'], message['date'], message['time']);
@@ -123,7 +133,7 @@ function getFriendsData(userID, day, date) {
 
  const scriptToExec = `(${scrapeThePage})()`;
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-     console.log(tabs[0]);
+     // console.log(tabs[0]);
      // console.log()
      chrome.tabs.executeScript(
         tabs[0].id,
@@ -136,18 +146,26 @@ function getFriendsData(userID, day, date) {
   console.log(friends)
   var friend_scores = {}
   friends.then(function(friendList) {
+    console.log("friendList:")
     console.log(friendList)
     var friendPromises = []
     friendList.forEach(function(friendEmail) { 
+      // console.log("in the for loop, this is the friendEmail")
+      // console.log(friendEmail)
       friendPromises.push(getIdFromFriend(friendEmail))
+
     })
+    console.log("pushing to friendPromises")
+    console.log(friendPromises)
     return Promise.all(friendPromises)
   }).then(function(friendIdsList) {
-    console.log(friendIdsList)
+    // console.log("THIS IS THE FRIEND LIST")
+    // console.log(friendIdsList)
     var friendScorePromises = []
     friendIdsList.forEach(function(friendId) {
-      friendScorePromises.push(getScoreFromId(friendId, date))
+      friendScorePromises.push(getScoreFromId(friendId, date, day))
     })
+    console.log(friendScorePromises)
     return Promise.all(friendScorePromises)
   }).then(function(friendScores) {
     console.log(friendScores)
