@@ -7,7 +7,7 @@ V 0.0
 	- involves adding a friends variable in chrome local storage <DONE> 
 	- set up a firebase listener for when friend nodes - using their UIDs - have changed in the database
 	- can probably update whenever the popup is clicked
-- (5) crawl and print all scores for a given day 
+- (5) crawl and print all scores for a given day <DONE> 
 - (6) switching from click based add to continuous monitoring
 
 

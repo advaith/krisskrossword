@@ -20,28 +20,9 @@ function scrapeThePage() {
     }
 };	
 
-// let add_friend_button = document.getElementById("add_friend_button")
-// let add_friend_text = document.getElementById("add_friend_text")
-
-// add_friend_button.onclick = function(element) {
-//   console.log("we did it")
-//   let color = element.target.value;
-//   const scriptToExec = `(${scrapeThePage})()`;
-//   console.log(scriptToExec)
-//   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-//      console.log(tabs[0]);
-//      // console.log()
-//      chrome.tabs.executeScript(
-//         tabs[0].id,
-//         {code: scriptToExec});
-//   });
-// };
-
-console.log("hello from the log")
-let report = document.getElementById('report');
-
 // Report button listener
 // Injects scraping content script upon click
+let report = document.getElementById('report');
 report.onclick = function(element) {
 	let color = element.target.value;
 	const scriptToExec = `(${scrapeThePage})()`;
@@ -54,28 +35,25 @@ report.onclick = function(element) {
 	});
 };
 
+// Add friend button listener
+// 
 let add_friend_button = document.getElementById("add_friend_button")
 let add_friend_text = document.getElementById("add_friend_text")
-
 add_friend_button.onclick = function(element) {
-  console.log("CLICK");
   let friendId = add_friend_text.value
-  console.log(friendId);
   var uid = firebase.auth().currentUser.uid;
-  console.log(uid);
   writeUserFriend(uid, friendId)
-  console.log("we did it")
+  console.log("Added friend with uid")
+  console.log(uid)
   add_friend_text.value = ""
 };
 
 
 
 
-
+// Helper function to get list of friends for a given uid
 function getFriendsList(userId) {
-  console.log("called getfriendslist")
   var ref = firebase.database()
-  // var newRoot = ref.child('friends/'+ userId)
   var rootRef = firebase.database().ref('friends');
   var newRoot = rootRef.child(userId);
   return newRoot.once('value').then(function(snapshot){
@@ -84,30 +62,24 @@ function getFriendsList(userId) {
           var friend_name = _child.key;
           friends.push(friend_name + "@gmail.com");
       });
-      // console.log("about to return getfriendslist")
       return friends;
   });
 }
 
+// Helper function to get uid from friend google id
 function getIdFromFriend(friendEmail) {
   var ref = firebase.database()
   var rootRef = firebase.database().ref('users');
   return rootRef.orderByChild('email').equalTo(friendEmail).once("value").then(function(snapshot) {
-        // console.log(snapshot)
         var answer = []
-        // console.log(snapshot.ref.parent)
         snapshot.forEach((function(child) { answer.push(child.key) })) 
-
         return answer[0]
-        // return snapshot.key;
   });
 }
 
+// Helper function to get score from uid, date, and day
 function getScoreFromId(friendId, date, day) {
-  // console.log("frinedID IS")
-  // console.log(friendId)
-   var date_path = date.split("/").join("");
-
+  var date_path = date.split("/").join("");
   var rootRef = firebase.database().ref(friendId + "/" + day + "/" + date_path);
   return rootRef.once("value").then(function(snapshot) {
     console.log("the snapshot val is:::::::::::")
@@ -119,8 +91,6 @@ function getScoreFromId(friendId, date, day) {
 // Background message listener
 // Listens for message from content script + sends to database
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-    // console.log(message['date']);
-    // console.log(message['time']);
     var uid = firebase.auth().currentUser.uid;
     var name = firebase.auth().currentUser.displayName;
     writeUserData(uid, message['day'], message['date'], message['time']);
@@ -128,20 +98,13 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 });
 
 // Get friends scores
-let friendscores = document.getElementById('get_friend_score');
+// let friendscores = document.getElementById('get_friend_score');
 
-// Report button listener
-// Injects scraping content script upon click
 function getFriendsData(userID, day, date) {
-
   var ref = firebase.database()
-
-  var friends = getFriendsList(userID) // this might be async?!?!?!?!?!?!!?
-  console.log(friends)
+  var friends = getFriendsList(userID)
   var friend_scores = {}
   friends.then(function(friendList) {
-    console.log("friendList:")
-    console.log(friendList)
     var friendPromises = []
     friendList.forEach(function(friendEmail) { 
       friendPromises.push(getIdFromFriend(friendEmail))
@@ -152,16 +115,20 @@ function getFriendsData(userID, day, date) {
     friendIdsList.forEach(function(friendId) {
       friendScorePromises.push(getScoreFromId(friendId, date, day))
     })
-    console.log(friendScorePromises)
+    var friends = getFriendsList(userID)
+    friendScorePromises.push(friends)
     return Promise.all(friendScorePromises)
   }).then(function(friendScores) {
-    console.log("GOT THE FRIEND SCORES!!!!!!!!!!!!!!!!!")
-    console.log(friendScores)
-    document.getElementById('friend-score-details').textContent = "Friend Scores: " + JSON.stringify(friendScores, null, '  ');
+    friendNames = friendScores.pop()
+    // make it a dictionary
+    friendScoresDict = {}
+    friendNames.forEach((key, i) => friendScoresDict[key] = friendScores[i]);
+    document.getElementById('friend-score-details').textContent = "Friend Scores: " + JSON.stringify(friendScoresDict, null, '  ');
     return friendScores
   }).catch(function (err) {
-    console.log('err!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', err);
+    console.log('err', err);
   });
+
 }
 
 // Database write
@@ -173,7 +140,9 @@ function writeUserData(userId, day, date, time) {
   firebase.database().ref(userId + "/" + day + "/" + date_path).set({
 	    time: time
   });
-  console.log("Finished writing to firebase");
+  document.getElementById('my-score-details').textContent = "My Score: " + time;
+
+  console.log("Finished writing user data to firebase");
 }
 
 function writeUserFriend(userId, friendId) {
@@ -193,12 +162,3 @@ function readUserData(userId, day, date, time) {
     return snapshot.val();
   });
 }
-// function writeData(key, value_name, value) {
-//   // Argument passed into ref is the path to the database 'file' that you're writing with this info
-//   // Should reflect predetermined database schema 
-//   // var date_path = date.split("/").join("");
-//   firebase.database().ref(key).set({
-//       value_name: value
-//   });
-//   console.log("Finished writing to firebase");
-// }
