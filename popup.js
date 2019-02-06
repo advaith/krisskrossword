@@ -97,15 +97,18 @@ function getScoreFromId(friendId, date, day) {
   var rootRef = firebase.database().ref(friendId + "/" + day + "/" + date_path);
   return rootRef.once("value").then(function(snapshot) {
     console.log("the snapshot val is:::::::::::")
-    console.log(snapshot.val())
+    console.log(snapshot.val()) //TODO - exceptio handle here! ! !
+    if (snapshot.val() === null) {
+      return "hasn't finished yet"
+    } else {
     return snapshot.val()["time"]
+    }
   });
 }
 
 // Background message listener
 // Listens for message from content script + sends to database
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-    console.log("listener called")
     var uid = firebase.auth().currentUser.uid;
     var name = firebase.auth().currentUser.displayName;
     writeUserData(uid, message['day'], message['date'], message['time']);
@@ -136,9 +139,14 @@ function getFriendsData(userID, day, date) {
   }).then(function(friendScores) {
     friendNames = friendScores.pop()
     // make it a dictionary
+    if (friendScores === null) {
+      console.log("ya they were null")
+      document.getElementById('friend-score-details').textContent = "No friends have reported scores yet!";
+    } else {
     friendScoresDict = {}
     friendNames.forEach((key, i) => friendScoresDict[key] = friendScores[i]);
     document.getElementById('friend-score-details').textContent = "Friend Scores: " + JSON.stringify(friendScoresDict, null, '  ');
+    }
     return friendScores
   }).catch(function (err) {
     console.log('err', err);
