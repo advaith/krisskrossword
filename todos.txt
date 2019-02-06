@@ -9,7 +9,7 @@ V 0.0
 	- can probably update whenever the popup is clicked
 - (5) crawl and print all scores for a given day <DONE> 
 - (5.5) Add exception handling for when your friends dont have scores!
-- (6) switching from click based add to continuous monitoring
+- (6) switching from click based add to continuous monitoring <DONE>
 - (7) Monitor for checks
 - (8) Show all user data for a day (average score, percentiles, etc.)!
 
