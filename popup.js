@@ -1,6 +1,7 @@
+
 // Content script code - should be moved to a separate js file that listens for existence of native DOM elements
 function scrapeThePage() {
-	console.log("huhhasfhlhsdf");
+	 console.log("scraping the page");
     var visited = window.location.href;
 
     // TODO: switch these queries to regexes
@@ -8,22 +9,35 @@ function scrapeThePage() {
     var completed = 0;
     if (finishedStatus) {
     	completed = 1;
-    	var key = String(document.URL).substring(46)
+    	var date = String(document.URL).substring(46)
 	    var timeStatus = document.querySelector("div.timer-count").textContent;
 	    var day = document.querySelector("div.PuzzleDetails-date--1HNzj").children[0].textContent.slice(0, -1);
 	    console.log("this should be timestatus")
 	    console.log(timeStatus)
-
+      chrome.storage.sync.set({date: date});
+      chrome.storage.sync.set({day: day});
 	    // Send object to database
-	    chrome.runtime.sendMessage({date: key, time: timeStatus, day: day});
+	    chrome.runtime.sendMessage({date: date, time: timeStatus, day: day});
       return;
     }
-};	
+};	 
+
+function loop_de_loop() {
+  console.log("LOOP TIME")
+  const scriptToExec = `(${scrapeThePage})()`;
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+     console.log(tabs[0]);
+     chrome.tabs.executeScript(
+        tabs[0].id,
+        {code: scriptToExec});
+  });
+}
 
 // Report button listener
 // Injects scraping content script upon click
 let report = document.getElementById('report');
 report.onclick = function(element) {
+  console.log("report was clicked")
 	let color = element.target.value;
 	const scriptToExec = `(${scrapeThePage})()`;
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -91,6 +105,7 @@ function getScoreFromId(friendId, date, day) {
 // Background message listener
 // Listens for message from content script + sends to database
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+    console.log("listener called")
     var uid = firebase.auth().currentUser.uid;
     var name = firebase.auth().currentUser.displayName;
     writeUserData(uid, message['day'], message['date'], message['time']);
@@ -162,3 +177,6 @@ function readUserData(userId, day, date, time) {
     return snapshot.val();
   });
 }
+
+setInterval(loop_de_loop, 10 * 1000)
+
