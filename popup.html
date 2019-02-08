@@ -1,24 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
-      button {
-        height: 50px;
-        width: 100px;
-        outline: none;
-      }
-    </style>
+     <link rel="stylesheet" type ="text/css" href="popup.css"></style>
   </head>
   <body>
     <script src="firebase.js"></script>
     <script src="credentials.js"></script>
 
-  <h3>welcome ! ! ! this is it - our UI </h3>
+  <h1> nyTimed </h1>
 
-    <button id="report">report score</button>
+    <!-- <button id="report">report score</button> -->
     <!-- <button id="get_friend_score">get friend scores</button> -->
     <pre><code id="my-score-details">My Score: null</code></pre>
-    <pre><code id="friend-score-details">null</code></pre>
 
 
   <div class="quickstart-user-details-container">
@@ -28,6 +21,23 @@
       <!-- <div>Firebase auth <code>currentUser</code> object value:</div> -->
       <!-- <pre><code id="quickstart-account-details">null</code></pre> -->
     </p>
+
+  </div>
+  <div id="world_tab_content" class="showing tab_content"> 
+    <h2> We are in world tab BOI </h2>
+
+
+  </div>
+  <div id="friend_tab_content" class="tab_content"  display="none"> 
+    <h2> We are in friend tab BOI </h2>
+
+    <pre><code id="friend-score-details">null</code></pre>
+
+
+  </div>
+  <div id="you_tab_content" class="tab_content" display="none"> 
+      <h2> We are in your tab BOI </h2>
+
     <form>
       <div>
         <label for="add_friend_text">Add a friend: </label>
@@ -37,6 +47,15 @@
         <button id="add_friend_button">Submit</button>
       </div>
     </form>
+
+
+
+  </div>
+
+  <div class="bottom_bar">
+        <div id="you_tab" class="bottom_bar_element">You</div>
+        <div id="friend_tab" class="bottom_bar_element">Friends</div>
+        <div id="world_tab" class="bottom_bar_element">World</div>
   </div>
     <script src="popup.js"></script>
 

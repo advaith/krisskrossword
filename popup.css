@@ -1,0 +1,38 @@
+body {
+	width: 350px;
+	height: 500px;
+}
+
+h1 {
+	color: orange;
+}
+
+ button {
+    height: 50px;
+    width: 100px;
+    outline: none;
+  }
+
+.bottom_bar_element {
+	width: 30%;
+	float: left;
+	height: 40px;
+	background: grey;
+	margin: 2px;
+	text-align: center;
+}
+
+.bottom_bar {
+	width: 100%;
+	position: fixed;
+	left: 0px;
+	bottom: 0px;
+}
+
+.world_tab_content {
+	display: none;
+}
+
+.world_tab_content {
+	display: none;
+}

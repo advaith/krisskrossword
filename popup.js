@@ -35,19 +35,19 @@ function loop_de_loop() {
 
 // Report button listener
 // Injects scraping content script upon click
-let report = document.getElementById('report');
-report.onclick = function(element) {
-  console.log("report was clicked")
-	let color = element.target.value;
-	const scriptToExec = `(${scrapeThePage})()`;
-	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-	   console.log(tabs[0]);
-	   // console.log()
-	   chrome.tabs.executeScript(
-	      tabs[0].id,
-	      {code: scriptToExec});
-	});
-};
+// let report = document.getElementById('report');
+// report.onclick = function(element) {
+//   console.log("report was clicked")
+// 	let color = element.target.value;
+// 	const scriptToExec = `(${scrapeThePage})()`;
+// 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+// 	   console.log(tabs[0]);
+// 	   // console.log()
+// 	   chrome.tabs.executeScript(
+// 	      tabs[0].id,
+// 	      {code: scriptToExec});
+// 	});
+// };
 
 // Add friend button listener
 // 
@@ -186,5 +186,5 @@ function readUserData(userId, day, date, time) {
   });
 }
 
-setInterval(loop_de_loop, 10 * 1000)
+setInterval(loop_de_loop, 3 * 1000)
 
