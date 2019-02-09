@@ -2,12 +2,14 @@
 <html>
   <head>
      <link rel="stylesheet" type ="text/css" href="popup.css"></style>
-  </head>
-  <body>
+     <link href="https://fonts.googleapis.com/css?family=Alfa+Slab+One" rel="stylesheet">
     <script src="firebase.js"></script>
     <script src="credentials.js"></script>
 
-  <h1> nyTimed </h1>
+  </head>
+  <body>
+  
+  <div class="title"> nyTimed </div>
 
     <!-- <button id="report">report score</button> -->
     <!-- <button id="get_friend_score">get friend scores</button> -->
@@ -20,7 +22,7 @@
        <div class="quickstart-user-details-container">
           <button id="quickstart-button">Sign-in with Google</button>
           <p>
-            Firebase sign-in status: <span id="quickstart-sign-in-status">Unknown</span>
+            You are: <span id="quickstart-sign-in-status">Unknown</span>
             <!-- <div>Firebase auth <code>currentUser</code> object value:</div> -->
             <!-- <pre><code id="quickstart-account-details">null</code></pre> -->
           </p>
@@ -31,12 +33,11 @@
   <div id="friend_tab_content" class="tab_content"> 
     <h2> Friends </h2>
     <pre><code id="friend-score-details">null</code></pre>
-    <form>
-      <div>
-        <label for="add_friend_text">Add a friend: </label>
-        <input type="text" id="add_friend_text" name="friend_u_name">
+    <form class="add_friend_form">
+      <div class="add_friend">
+        <input type="text" id="add_friend_text"  placeholder="Add friends!" name="friend_u_name">
       </div>
-      <div>
+      <div class="add_friend">
         <button id="add_friend_button">Submit</button>
       </div>
     </form>
@@ -55,6 +56,7 @@
         <img id="friend_tab" class="bottom_bar_element" src="./open-iconic-master/svg/people.svg">
         <img id="world_tab" class="bottom_bar_element" src="./open-iconic-master/svg/globe.svg">
   </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
     <script src="popup.js"></script>
     <script src="popup_helpers.js"></script>
 

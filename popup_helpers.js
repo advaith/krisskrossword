@@ -23,3 +23,10 @@ you_tab.onclick = function() {show_tab('you_tab')};
 console.log(you_tab);
 friend_tab.onclick = function () {show_tab('friend_tab')};
 world_tab.onclick = function () {show_tab('world_tab')};
+
+
+$("#add_friend_text").keyup(function(event) {
+    if (event.keyCode === 13) {
+    	console.log('lol');
+    }
+});

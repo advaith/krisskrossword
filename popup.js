@@ -33,22 +33,6 @@ function loop_de_loop() {
   });
 }
 
-// Report button listener
-// Injects scraping content script upon click
-// let report = document.getElementById('report');
-// report.onclick = function(element) {
-//   console.log("report was clicked")
-// 	let color = element.target.value;
-// 	const scriptToExec = `(${scrapeThePage})()`;
-// 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-// 	   console.log(tabs[0]);
-// 	   // console.log()
-// 	   chrome.tabs.executeScript(
-// 	      tabs[0].id,
-// 	      {code: scriptToExec});
-// 	});
-// };
-
 // Add friend button listener
 // 
 let add_friend_button = document.getElementById("add_friend_button")
@@ -56,7 +40,7 @@ let add_friend_text = document.getElementById("add_friend_text")
 add_friend_button.onclick = function(element) {
   let friendId = add_friend_text.value
   var uid = firebase.auth().currentUser.uid;
-  writeUserFriend(uid, friendId)
+  //writeUserFriend(uid, friendId)
   console.log("Added friend with uid")
   console.log(uid)
   add_friend_text.value = ""
@@ -81,7 +65,7 @@ function getFriendsList(userId) {
 }
 
 // Helper function to get uid from friend google id
-function getIdFromFriend(friendEmail) {
+function getIdFromEmail(friendEmail) {
   var ref = firebase.database()
   var rootRef = firebase.database().ref('users');
   return rootRef.orderByChild('email').equalTo(friendEmail).once("value").then(function(snapshot) {
@@ -117,7 +101,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
 // Get friends scores
 // let friendscores = document.getElementById('get_friend_score');
-
 function getFriendsData(userID, day, date) {
   var ref = firebase.database()
   var friends = getFriendsList(userID)
@@ -125,7 +108,7 @@ function getFriendsData(userID, day, date) {
   friends.then(function(friendList) {
     var friendPromises = []
     friendList.forEach(function(friendEmail) { 
-      friendPromises.push(getIdFromFriend(friendEmail))
+      friendPromises.push(getIdFromEmail(friendEmail))
     })
     return Promise.all(friendPromises)
   }).then(function(friendIdsList) {
@@ -170,12 +153,17 @@ function writeUserData(userId, day, date, time) {
 
 function writeUserFriend(userId, friendId) {
   // NOTE - cant save periods so must just use gmail
-  console.log("tryna write user friend")
   // Argument passed into ref is the path to the database 'file' that you're writing with this info
   // Should reflect predetermined database schema 
-  firebase.database().ref("/friends/" + userId + "/" + friendId).update({
+  // TODO: make sure this user even exists before adding it in?!
+  friendEmail = friendId + "@gmail.com";
+  getIdFromEmail(friendEmail).then(function (friendId) {
+    console.log("FRIEND REQUEST ID: ")
+    console.log(friendId);
+    firebase.database().ref("/friends/" + userId + "/" + friendId).update({
       value: 1
-  });
+    });
+  })
   console.log("Finished writing to firebase");
 }
 
@@ -186,5 +174,5 @@ function readUserData(userId, day, date, time) {
   });
 }
 
-setInterval(loop_de_loop, 20 * 1000)
+setInterval(loop_de_loop, 3 * 1000)
 

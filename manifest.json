@@ -23,7 +23,7 @@
       "128": "images/get_started128.png"
     },
     "manifest_version": 2,
-    "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
+    "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://ajax.googleapis.com https://fonts.googleapis.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
     "oauth2": {
       "client_id": "115024908254-iq0458o0l7r2lg7oktabjel0of11rlcq.apps.googleusercontent.com",
       "scopes": [
