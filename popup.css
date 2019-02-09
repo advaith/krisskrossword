@@ -26,10 +26,6 @@ body {
 
 }
 
-.bottom_bar_element:hover {
-	border: 1px solid grey;
-}
-
 .add_friend_form {
 	position: fixed;
 	bottom: 95px;
@@ -47,6 +43,10 @@ body {
 	bottom: 0px;
 }
 
+#you_tab {
+	border: 1px solid grey;
+}
+
 
 #friend_tab_content {
 	display: none ;
@@ -54,4 +54,9 @@ body {
 
 #world_tab_content {
 	display: none ;
+}
+
+
+.bottom_bar_element:hover {
+	background: gainsboro;
 }

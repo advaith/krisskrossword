@@ -40,7 +40,7 @@ let add_friend_text = document.getElementById("add_friend_text")
 add_friend_button.onclick = function(element) {
   let friendId = add_friend_text.value
   var uid = firebase.auth().currentUser.uid;
-  //writeUserFriend(uid, friendId)
+  //2writeUserFriend(uid, friendId)
   console.log("Added friend with uid")
   console.log(uid)
   add_friend_text.value = ""
