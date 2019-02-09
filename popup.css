@@ -1,6 +1,6 @@
 body {
-	width: 350px;
-	height: 500px;
+	width: 250px;
+	height: 400px;
 }
 
 h1 {
@@ -14,11 +14,12 @@ h1 {
   }
 
 .bottom_bar_element {
-	width: 30%;
+	width: 25.5%;
 	float: left;
-	height: 40px;
+	height: 50px;
 	background: grey;
 	margin: 2px;
+	padding: 8px;
 	text-align: center;
 }
 
