@@ -3,12 +3,14 @@ function show_tab(tab_name) {
 	all_tabs = ['you_tab', 'friend_tab', 'world_tab']
 	console.log(tab_name);
 	all_tabs.forEach(function(el_name) {
-		element = document.getElementById(el_name + "_content");
-		console.log(element)
+		content = document.getElementById(el_name + "_content");
+		tab = document.getElementById(el_name);
 		if (el_name == tab_name) {
-			element.style.display = "block";
+			content.style.display = "block";
+			tab.style.border = "1px solid grey";
 		} else {
-			element.style.display = "none";
+			content.style.display = "none";
+			tab.style.border = "1px solid transparent";
 		}
 	})
 }
@@ -24,9 +26,3 @@ console.log(you_tab);
 friend_tab.onclick = function () {show_tab('friend_tab')};
 world_tab.onclick = function () {show_tab('world_tab')};
 
-
-$("#add_friend_text").keyup(function(event) {
-    if (event.keyCode === 13) {
-    	console.log('lol');
-    }
-});

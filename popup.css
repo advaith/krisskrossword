@@ -3,10 +3,6 @@ body {
 	height: 400px;
 }
 
-h1 {
-	color: orange;
-}
-
  button {
     height: 25px;
     width: 80px;
@@ -20,18 +16,23 @@ h1 {
 }
 
 .bottom_bar_element {
-	width: 25.5%;
+	width: 25%;
 	float: left;
 	height: 50px;
-	background: grey;
 	margin: 2px;
 	padding: 8px;
 	text-align: center;
+	border: 1px solid transparent;
+
+}
+
+.bottom_bar_element:hover {
+	border: 1px solid grey;
 }
 
 .add_friend_form {
 	position: fixed;
-	bottom: 80px;
+	bottom: 95px;
 }
 
 .add_friend {
