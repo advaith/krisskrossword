@@ -29,10 +29,12 @@ h1 {
 	bottom: 0px;
 }
 
-.world_tab_content {
-	display: none;
+
+#friend_tab_content {
+	display: none ;
 }
 
-.world_tab_content {
-	display: none;
+#world_tab_content {
+	display: none ;
 }
+

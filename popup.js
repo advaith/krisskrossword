@@ -186,5 +186,5 @@ function readUserData(userId, day, date, time) {
   });
 }
 
-setInterval(loop_de_loop, 3 * 1000)
+setInterval(loop_de_loop, 20 * 1000)
 

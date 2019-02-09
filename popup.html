@@ -14,30 +14,23 @@
     <pre><code id="my-score-details">My Score: null</code></pre>
 
 
-  <div class="quickstart-user-details-container">
-    <button id="quickstart-button">Sign-in with Google</button>
-    <p>
-      Firebase sign-in status: <span id="quickstart-sign-in-status">Unknown</span>
-      <!-- <div>Firebase auth <code>currentUser</code> object value:</div> -->
-      <!-- <pre><code id="quickstart-account-details">null</code></pre> -->
-    </p>
 
+  <div id="you_tab_content" class="tab_content"> 
+      <h2> Account Details </h2>
+       <div class="quickstart-user-details-container">
+          <button id="quickstart-button">Sign-in with Google</button>
+          <p>
+            Firebase sign-in status: <span id="quickstart-sign-in-status">Unknown</span>
+            <!-- <div>Firebase auth <code>currentUser</code> object value:</div> -->
+            <!-- <pre><code id="quickstart-account-details">null</code></pre> -->
+          </p>
+        </div>
   </div>
-  <div id="world_tab_content" class="showing tab_content"> 
-    <h2> We are in world tab BOI </h2>
 
 
-  </div>
-  <div id="friend_tab_content" class="tab_content"  display="none"> 
-    <h2> We are in friend tab BOI </h2>
-
+  <div id="friend_tab_content" class="tab_content"> 
+    <h2> Friends </h2>
     <pre><code id="friend-score-details">null</code></pre>
-
-
-  </div>
-  <div id="you_tab_content" class="tab_content" display="none"> 
-      <h2> We are in your tab BOI </h2>
-
     <form>
       <div>
         <label for="add_friend_text">Add a friend: </label>
@@ -47,18 +40,23 @@
         <button id="add_friend_button">Submit</button>
       </div>
     </form>
-
-
-
   </div>
+
+
+
+  <div id="world_tab_content" class="showing tab_content"> 
+    <h2> the whole entire crossworld </h2>
+  </div>
+
+
 
   <div class="bottom_bar">
-        <div id="you_tab" class="bottom_bar_element">You</div>
-        <div id="friend_tab" class="bottom_bar_element">Friends</div>
-        <div id="world_tab" class="bottom_bar_element">World</div>
+        <div id="you_tab" class="bottom_bar_element"><img src="./open-iconic-master/svg/eye.svg"></div>
+        <div id="friend_tab" class="bottom_bar_element"><img src="./open-iconic-master/svg/people.svg"></div>
+        <div id="world_tab" class="bottom_bar_element"><img src="./open-iconic-master/svg/globe.svg"></div>
   </div>
     <script src="popup.js"></script>
-
+    <script src="popup_helpers.js"></script>
 
   </body>
 </html>
