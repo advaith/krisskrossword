@@ -100,9 +100,9 @@ function getScoreFromId(friendId, date, day) {
     console.log("the snapshot val is:::::::::::")
     console.log(snapshot.val()) //TODO - exceptio handle here! ! !
     if (snapshot.val() === null) {
-      return "hasn't finished yet"
+      return ["hasn't finished yet", 0]
     } else {
-    return snapshot.val()["time"]
+    return [snapshot.val()["time"], snapshot.val()["checked"]]
     }
   });
 }
@@ -143,9 +143,16 @@ function getFriendsData(userID, day, date) {
       console.log("ya they were null")
       document.getElementById('friend-score-details').textContent = "No friends have reported scores yet!";
     } else {
+    console.log("here are the FRIENDSCORES")
+    console.log(friendScores)
     friendScoresDict = {}
-    friendNames.forEach((key, i) => friendScoresDict[key] = friendScores[i]);
-    document.getElementById('friend-score-details').textContent = "Friend Scores: " + JSON.stringify(friendScoresDict, null, '  ');
+    friendChecksDict = {}
+    friendNames.forEach((key, i) => friendScoresDict[key] = friendScores[i][0]);
+    friendNames.forEach((key, i) => friendChecksDict[key] = friendScores[i][1]);
+
+    document.getElementById('friend-score-details').textContent = "Friend Scores: " + JSON.stringify(friendScoresDict, null, '  ')
+    + "Friend Checks: " + JSON.stringify(friendChecksDict, null, '  ');
+
     }
     return friendScores
   }).catch(function (err) {

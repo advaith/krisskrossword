@@ -17,6 +17,9 @@ V 0.0
 V 0.1
 - ui + popup for diff stats
 - computation of stats
+- show a list of all friends
+- prevent invalid friends
+- populate crossWORLD!!!!
 - automatic scraping of old puzzles solved
 - (Almost Eventually) refactor + clean up code to make this make any sense at all
 - (Eventually) chrome store
