@@ -3,7 +3,20 @@
 function scrapeThePage() {
 	 console.log("scraping the page");
     var visited = window.location.href;
+    function checkForChecks() {
+      console.log("checking for ... checks????")
+      var all_cells = document.getElementsByClassName('Board-svg--34be-')[0].children[2].children
+      var checked = 0
+      console.log(all_cells)
+      Array.from(all_cells).forEach(function(element) {
+        if (element.children[0].className['baseVal'].toString().includes('Shame')) {
+          checked = 1;
+          return checked
+        }
+      });
+      return checked
 
+    }
     // TODO: switch these queries to regexes
     var finishedStatus = document.querySelector("div.Toolbar-resetButton--1bkIx");
     var completed = 0;
@@ -14,13 +27,17 @@ function scrapeThePage() {
 	    var day = document.querySelector("div.PuzzleDetails-date--1HNzj").children[0].textContent.slice(0, -1);
 	    console.log("this should be timestatus")
 	    console.log(timeStatus)
+      var checked = checkForChecks()
       chrome.storage.sync.set({date: date});
       chrome.storage.sync.set({day: day});
 	    // Send object to database
-	    chrome.runtime.sendMessage({date: date, time: timeStatus, day: day});
+	    chrome.runtime.sendMessage({date: date, time: timeStatus, day: day, checked: checked});
       return;
     }
 };	 
+
+
+
 
 function loop_de_loop() {
   console.log("LOOP TIME")
@@ -95,7 +112,7 @@ function getScoreFromId(friendId, date, day) {
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     var uid = firebase.auth().currentUser.uid;
     var name = firebase.auth().currentUser.displayName;
-    writeUserData(uid, message['day'], message['date'], message['time']);
+    writeUserData(uid, message['day'], message['date'], message['time'], message['checked']);
     getFriendsData(uid, message['day'], message['date'])
 });
 
@@ -139,14 +156,15 @@ function getFriendsData(userID, day, date) {
 
 // Database write
 // User information --> database entry
-function writeUserData(userId, day, date, time) {
+function writeUserData(userId, day, date, time, checked) {
   // Argument passed into ref is the path to the database 'file' that you're writing with this info
   // Should reflect predetermined database schema 
   var date_path = date.split("/").join("");
   firebase.database().ref(userId + "/" + day + "/" + date_path).set({
-	    time: time
+	    time: time,
+      checked: checked
   });
-  document.getElementById('my-score-details').textContent = "My Score: " + time;
+  document.getElementById('my-score-details').textContent = "My Score: " + time + " | Checked Status: " + checked; 
 
   console.log("Finished writing user data to firebase");
 }
