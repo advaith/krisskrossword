@@ -85,21 +85,33 @@ function getFriendsFromID(userId) {
   });
 }
 
-function getAllUsers() {
+function getAllEmails() {
   var ref = firebase.database()
   var newRoot = firebase.database().ref('users');
   // var newRoot = rootRef.child(userId);
   return newRoot.once('value').then(function(snapshot){
       friends = [];
       snapshot.forEach(function(_child){
-        console.log("IN GET ALL USERS AGAIN!          ")
-          console.log(_child.val()['email'])
-          console.log(_child)
-          var friend_name = _child.key;
-          friends.push(_child.val()['email']);
+        var friend_name = _child.key;
+        friends.push(_child.val()['email']);
       });
-      console.log("IN GET ALL USERS         !")
-      console.log(friends)
+      console.log("getAllEmails | \t friends", friends)
+      return friends;
+  });
+}
+
+
+function getAllNames() {
+  var ref = firebase.database()
+  var newRoot = firebase.database().ref('users');
+  // var newRoot = rootRef.child(userId);
+  return newRoot.once('value').then(function(snapshot){
+      friends = [];
+      snapshot.forEach(function(_child){
+        var friend_name = _child.key;
+        friends.push(_child.val()['name']);
+      });
+      console.log("getAllEmails | \t friends", friends)
       return friends;
   });
 }
@@ -123,47 +135,48 @@ function getScoreFromId(friendId, date, day) {
 function getEmailFromId(friendID) {
   var ref = firebase.database()
   var rootRef = firebase.database().ref('users/' + friendID);
+  console.log("getEmailFromId | \t GETTING EMAIL FOR: ", friendID)
 
   return rootRef.once('value').then(function(snapshot) {
-    console.log("getEmailFromId | \t GETTING EMAIL: ")
     email = snapshot.child("email").val()
-    console.log("getEmailFromId | \t" + email)
+
+    console.log("getEmailFromId | \t EMAIL: ", email)
     return email;
   })
 };
 
 
 function getIdFromEmail(friendEmail) {
-  console.log("getIdFromEmail | \t FOR MY DEAR FRIEND:")
-  console.log("getIdFromEmail | \t" + friendEmail)
+  console.log("getIdFromEmail | \t beginning FOR MY DEAR FRIEND:", friendEmail)
   var ref = firebase.database()
   var rootRef = firebase.database().ref('users');
 
-  poss_user_ids = []
   return rootRef.orderByChild('email').equalTo(friendEmail).once("value").then(function(snapshot) {
-        var answer = []
+        poss_user_ids = []
         snapshot.forEach((function(child) {
-         poss_user_ids.push(child.key)
-       })) 
+          poss_user_ids.push(child.key)
+        })) 
+        console.log("getIdFromEmail | \t poss_user_ids: ", poss_user_ids)
         return [poss_user_ids[0]]
   }).then(function(poss_users) {
       poss_user_promises = []
       poss_users.forEach(function(poss_user) {
         poss_user_promises.push(getEmailFromId(poss_user))
       })
-      console.log("getIdFromEmail | poss_user_promises ", poss_user_promises)
-
+      console.log("getIdFromEmail | \t poss user id second promise: ", poss_users[0])
+      poss_user_promises.push(poss_users[0])
       return Promise.all(poss_user_promises)
-  }).then(function(final_emails) {
-      console.log("getIdFromEmail | \tFOR FRIEND:")
-      console.log("getIdFromEmail | \t" + friendEmail)
-      console.log("getIdFromEmail | \tfinal_emails")
-      console.log(final_emails[0])
-      if(final_emails[0] === null) {
+  }).then(function(final_elements) {
+      poss_user_id = final_elements.pop()
+      final_emails = final_elements[0]
+
+      console.log("getIdFromEmail | \tfinal_email: ", final_emails)
+      console.log("getIdFromEmail | \t poss_user_id: ", poss_user_id)
+      if(final_emails === null) {
         console.log("getIdFromEmail | \t invalid friend")
-        return "invalid friend"
+        //return "invalid friend"
       } else {
-        return poss_user_ids[0]
+        return poss_user_id
       }
   });
 }
@@ -215,33 +228,35 @@ function getFriendsData(userID, day, date) {
 
 
 function getAllData(userID, day, date) {
-  console.log("getALlData | beginning");
+  console.log("getAllData | beginning");
   var ref = firebase.database()
-  var friends = getAllUsers()
+  var friends = getAllEmails()
   var friend_scores = {}
   friends.then(function(friendList) {
+    console.log("getAllData | Friends email list: \t", friendList)
     var friendPromises = []
     friendList.forEach(function(friendEmail) { 
       friendPromises.push(getIdFromEmail(friendEmail))
     })
     return Promise.all(friendPromises)
   }).then(function(friendIdsList) {
+    console.log("getAllData | Friends ID list: \t", friendIdsList)
     var friendScorePromises = []
     friendIdsList.forEach(function(friendId) {
       friendScorePromises.push(getScoreFromId(friendId, date, day))
     })
-    var friends = getFriendsFromID(userID)
-    friendScorePromises.push(friends)
+    var allNames = getAllNames();
+    friendScorePromises.push(allNames);
     return Promise.all(friendScorePromises)
   }).then(function(friendScores) {
     friendNames = friendScores.pop()
+    console.log("getAllData | Friend scores: ", friendScores)
     // make it a dictionary
     if (friendScores === null) {
-      console.log("getALlData | \t ya they were null")
+      console.log("getAllData | \t ya they were null")
       document.getElementById('world-score-details').textContent = "No users in the WHOLE WORLD have reported scores yet!";
     } else {
-    console.log("getALlData | \there are the FRIENDSCORES")
-    console.log(friendScores)
+    console.log("getAllData | \there are the FRIENDSCORES", friendScores)
     friendScoresDict = {}
     friendChecksDict = {}
     friendNames.forEach((key, i) => friendScoresDict[key] = friendScores[i][0]);
@@ -306,11 +321,9 @@ function writeUserFriend(userId, friendId) {
   idEmailPromises = [getIdFromEmail(friendEmail)];
 
   Promise.all(idEmailPromises).then(function (element) {
-    console.log("writeUserFriend | beginning: ", element);
+    //console.log("writeUserFriend | beginning: ", element);
     add_friend_success_text = document.getElementById("add_friend_success")
     if (element[0] === "invalid friend") {
-      // TODO: insert error message into dom saying that person doesn't exist
-      console.log(add_friend_success_text)
       add_friend_success_text.innerHTML = "User does not exist"
     } else {
       firebase.database().ref("/friends/" + userId + "/" + friendId).update({
