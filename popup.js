@@ -226,6 +226,13 @@ function getFriendsData(userID, day, date) {
 
 }
 
+// function convertTimeStringtoSeconds(time) {
+//   var minutes = int(time[0:2])
+//   var seconds = int(time[3:])
+//   var time = (minutes * 60) + seconds
+//   return time
+// }
+
 
 function getAllData(userID, day, date) {
   console.log("getAllData | beginning");
