@@ -57,9 +57,10 @@ let add_friend_text = document.getElementById("add_friend_text")
 add_friend_button.onclick = function(element) {
   let friendId = add_friend_text.value
   var uid = firebase.auth().currentUser.uid;
-  //2writeUserFriend(uid, friendId)
-  console.log("Added friend with uid")
-  console.log(uid)
+  writeUserFriend(uid, friendId)
+  // console.log("Added friend with uid")
+  // // console.log(uid)
+  // console.log(friendId)
   add_friend_text.value = ""
 };
 
@@ -81,14 +82,48 @@ function getFriendsList(userId) {
   });
 }
 
+function getEmailFromId(friendID) {
+  var ref = firebase.database()
+  var rootRef = firebase.database().ref('users/' + friendID);
+
+  return rootRef.once('value').then(function(snapshot) {
+    console.log("[getEmailFromId | GETTING EMAIL: ")
+    email = snapshot.child("email").val()
+    console.log(email)
+    return email;
+  })
+};
+
 // Helper function to get uid from friend google id
 function getIdFromEmail(friendEmail) {
+  console.log("FOR MY DEAR FRIEND:")
+  console.log(friendEmail)
   var ref = firebase.database()
   var rootRef = firebase.database().ref('users');
+
+  poss_user_ids = []
   return rootRef.orderByChild('email').equalTo(friendEmail).once("value").then(function(snapshot) {
         var answer = []
-        snapshot.forEach((function(child) { answer.push(child.key) })) 
-        return answer[0]
+        snapshot.forEach((function(child) {
+         poss_user_ids.push(child.key)
+       })) 
+        return [poss_user_ids[0]]
+  }).then(function(poss_users) {
+      poss_user_promises = []
+      poss_users.forEach(function(poss_user) {
+        poss_user_promises.push(getEmailFromId(poss_user))
+      })
+      return Promise.all(poss_user_promises)
+  }).then(function(final_emails) {
+      console.log("FOR FRIEND:")
+      console.log(friendEmail)
+      console.log('final_emails')
+      console.log(final_emails)
+      if(final_emails[0] === friendEmail) {
+        return poss_user_ids[0]
+      } else {
+        return "invalid friend"
+      }
   });
 }
 
@@ -182,12 +217,19 @@ function writeUserFriend(userId, friendId) {
   // Should reflect predetermined database schema 
   // TODO: make sure this user even exists before adding it in?!
   friendEmail = friendId + "@gmail.com";
+  // firebase.database().ref("/friends/" + userId + "/" + friendId).update({
+  //   value: 1
+  // }); 
   getIdFromEmail(friendEmail).then(function (friendId) {
     console.log("FRIEND REQUEST ID: ")
     console.log(friendId);
-    firebase.database().ref("/friends/" + userId + "/" + friendId).update({
-      value: 1
-    });
+    if(friendId === "invalid friend") {
+      console.log("invalid friend u illiterati")
+    } else { 
+      firebase.database().ref("/friends/" + userId + "/" + friendId).update({
+        value: 1
+      }); 
+    }
   })
   console.log("Finished writing to firebase");
 }

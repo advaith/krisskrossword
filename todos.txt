@@ -5,16 +5,17 @@ V 0.0
 - (3) integrate existing code with requests layer for db <DONE>
 - (4) adding friends + privacy 
 	- involves adding a friends variable in chrome local storage <DONE> 
-	- set up a firebase listener for when friend nodes - using their UIDs - have changed in the database
-	- can probably update whenever the popup is clicked
+	- set up a firebase listener for when friend nodes - using their UIDs - have changed in the database <DONE>
+	- can probably update whenever the popup is clicked <DONE>
 - (5) crawl and print all scores for a given day <DONE> 
 - (5.5) Add exception handling for when your friends dont have scores! <DONE> 
 - (6) switching from click based add to continuous monitoring <DONE>
-- (7) Monitor for checks
+- (7) Monitor for checks <DONE!> 
 - (8) Show all user data for a day (average score, percentiles, etc.)!
 
 
 V 0.1
+- stop looping repeatedly everywhere...
 - ui + popup for diff stats
 - computation of stats
 - show a list of all friends
