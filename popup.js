@@ -52,6 +52,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     var name = firebase.auth().currentUser.displayName;
     writeUserData(uid, message['day'], message['date'], message['time'], message['checked']);
     getFriendsData(uid, message['day'], message['date'])
+    getAllData(uid, message['day'], message['date'])
 });
  
 
@@ -80,6 +81,25 @@ function getFriendsFromID(userId) {
           var friend_name = _child.key;
           friends.push(friend_name + "@gmail.com");
       });
+      return friends;
+  });
+}
+
+function getAllUsers() {
+  var ref = firebase.database()
+  var newRoot = firebase.database().ref('users');
+  // var newRoot = rootRef.child(userId);
+  return newRoot.once('value').then(function(snapshot){
+      friends = [];
+      snapshot.forEach(function(_child){
+        console.log("IN GET ALL USERS AGAIN!          ")
+          console.log(_child.val()['email'])
+          console.log(_child)
+          var friend_name = _child.key;
+          friends.push(_child.val()['email']);
+      });
+      console.log("IN GET ALL USERS         !")
+      console.log(friends)
       return friends;
   });
 }
@@ -181,16 +201,87 @@ function getFriendsData(userID, day, date) {
     friendChecksDict = {}
     friendNames.forEach((key, i) => friendScoresDict[key] = friendScores[i][0]);
     friendNames.forEach((key, i) => friendChecksDict[key] = friendScores[i][1]);
-
-    document.getElementById('friend-score-details').textContent = "Friend Scores: " + JSON.stringify(friendScoresDict, null, '  ')
-    + "Friend Checks: " + JSON.stringify(friendChecksDict, null, '  ');
-
+    niceHtml = dict_to_table(friendScoresDict, friendChecksDict)
+    // document.getElementById('friend-score-details').textContent = "Friend Scores: " + JSON.stringify(friendScoresDict, null, '  ')
+    // + "Friend Checks: " + JSON.stringify(friendChecksDict, null, '  ');
+    document.getElementById('friend-score-details').innerHTML = niceHtml;
     }
     return friendScores
   }).catch(function (err) {
     console.log('getFriendsData | \terr', err);
   });
 
+}
+
+
+function getAllData(userID, day, date) {
+  console.log("getALlData | beginning");
+  var ref = firebase.database()
+  var friends = getAllUsers()
+  var friend_scores = {}
+  friends.then(function(friendList) {
+    var friendPromises = []
+    friendList.forEach(function(friendEmail) { 
+      friendPromises.push(getIdFromEmail(friendEmail))
+    })
+    return Promise.all(friendPromises)
+  }).then(function(friendIdsList) {
+    var friendScorePromises = []
+    friendIdsList.forEach(function(friendId) {
+      friendScorePromises.push(getScoreFromId(friendId, date, day))
+    })
+    var friends = getFriendsFromID(userID)
+    friendScorePromises.push(friends)
+    return Promise.all(friendScorePromises)
+  }).then(function(friendScores) {
+    friendNames = friendScores.pop()
+    // make it a dictionary
+    if (friendScores === null) {
+      console.log("getALlData | \t ya they were null")
+      document.getElementById('world-score-details').textContent = "No users in the WHOLE WORLD have reported scores yet!";
+    } else {
+    console.log("getALlData | \there are the FRIENDSCORES")
+    console.log(friendScores)
+    friendScoresDict = {}
+    friendChecksDict = {}
+    friendNames.forEach((key, i) => friendScoresDict[key] = friendScores[i][0]);
+    friendNames.forEach((key, i) => friendChecksDict[key] = friendScores[i][1]);
+    niceHtml = dict_to_table(friendScoresDict, friendChecksDict)
+    // document.getElementById('friend-score-details').textContent = "Friend Scores: " + JSON.stringify(friendScoresDict, null, '  ')
+    // + "Friend Checks: " + JSON.stringify(friendChecksDict, null, '  ');
+    console.log("THE REAL QUEDSTION IS?!?") 
+    console.log(niceHtml)
+    document.getElementById('world-score-details').innerHTML = niceHtml;
+    }
+    return friendScores
+  }).catch(function (err) {
+    console.log('getAllData | \terr', err);
+  });
+
+}
+
+
+
+
+function dict_to_table(scoreDict, checkDict) {
+  var html = '<table style="width:100%">'
+  html += '<tr>'
+  html += '<th>Name</th>'
+  html += '<th>Time</th>' 
+  html += '<th>Checked Status</th>'
+  html += '</tr>'
+
+  for(var uid in scoreDict) {
+    html += '<tr>'
+    var score = scoreDict[uid]
+    var check = checkDict[uid]
+    html += '<td>' + uid + '</td>'
+    html += '<td>' + score + '</td>'
+    html += '<td>' + check + '</td>'
+    html += '</tr>'
+  }
+  html += '</table>'
+  return html
 }
 
 // Database write
@@ -232,5 +323,5 @@ function writeUserFriend(userId, friendId) {
 }
 
 
-setInterval(loop_de_loop, 20 * 1000)
+setInterval(loop_de_loop, 3 * 1000)
 
