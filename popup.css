@@ -26,16 +26,6 @@ body {
 
 }
 
-.add_friend_form {
-	position: fixed;
-	bottom: 95px;
-}
-
-.add_friend {
-	float: left;
-	height: 15px;
-}
-
 .bottom_bar {
 	width: 100%;
 	position: fixed;

@@ -1,13 +1,12 @@
 
 // Content script code - should be moved to a separate js file that listens for existence of native DOM elements
 function scrapeThePage() {
-	 console.log("scraping the page");
+	 console.log("scrapeThePage | \t beginning");
     var visited = window.location.href;
     function checkForChecks() {
-      console.log("checking for ... checks????")
+      console.log("scrapeThePage | \t checking for ... checks????")
       var all_cells = document.getElementsByClassName('Board-svg--34be-')[0].children[2].children
       var checked = 0
-      console.log(all_cells)
       Array.from(all_cells).forEach(function(element) {
         if (element.children[0].className['baseVal'].toString().includes('Shame')) {
           checked = 1;
@@ -25,8 +24,7 @@ function scrapeThePage() {
     	var date = String(document.URL).substring(46)
 	    var timeStatus = document.querySelector("div.timer-count").textContent;
 	    var day = document.querySelector("div.PuzzleDetails-date--1HNzj").children[0].textContent.slice(0, -1);
-	    console.log("this should be timestatus")
-	    console.log(timeStatus)
+	    console.log("scrapeThePage | \t timestatus: " + timeStatus)
       var checked = checkForChecks()
       chrome.storage.sync.set({date: date});
       chrome.storage.sync.set({day: day});
@@ -34,41 +32,45 @@ function scrapeThePage() {
 	    chrome.runtime.sendMessage({date: date, time: timeStatus, day: day, checked: checked});
       return;
     }
-};	 
-
-
+};	
 
 
 function loop_de_loop() {
-  console.log("LOOP TIME")
+  console.log("loop_de_loop | starting");
   const scriptToExec = `(${scrapeThePage})()`;
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-     console.log(tabs[0]);
      chrome.tabs.executeScript(
         tabs[0].id,
         {code: scriptToExec});
   });
 }
 
+// Background message listener
+// Listens for message from content script + sends to database
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+    var uid = firebase.auth().currentUser.uid;
+    var name = firebase.auth().currentUser.displayName;
+    writeUserData(uid, message['day'], message['date'], message['time'], message['checked']);
+    getFriendsData(uid, message['day'], message['date'])
+});
+ 
+
+
 // Add friend button listener
-// 
 let add_friend_button = document.getElementById("add_friend_button")
-let add_friend_text = document.getElementById("add_friend_text")
+let add_friend_input = document.getElementById("add_friend_input")
 add_friend_button.onclick = function(element) {
-  let friendId = add_friend_text.value
+  let friendId = add_friend_input.value
   var uid = firebase.auth().currentUser.uid;
   writeUserFriend(uid, friendId)
-  // console.log("Added friend with uid")
-  // // console.log(uid)
-  // console.log(friendId)
-  add_friend_text.value = ""
+  add_friend_input.value = ""
 };
 
 
 
 
 // Helper function to get list of friends for a given uid
-function getFriendsList(userId) {
+function getFriendsFromID(userId) {
   var ref = firebase.database()
   var rootRef = firebase.database().ref('friends');
   var newRoot = rootRef.child(userId);
@@ -82,22 +84,38 @@ function getFriendsList(userId) {
   });
 }
 
+// Helper function to get score from uid, date, and day
+function getScoreFromId(friendId, date, day) {
+  var date_path = date.split("/").join("");
+  var rootRef = firebase.database().ref(friendId + "/" + day + "/" + date_path);
+  return rootRef.once("value").then(function(snapshot) {
+    console.log("getScoreFromId | \t the snapshot val is:::::::::::")
+    console.log("getScoreFromId | \t" + snapshot.val()) //TODO - exception handle here! ! !
+    if (snapshot.val() === null) {
+      return ["hasn't finished yet", 0]
+    } else {
+    return [snapshot.val()["time"], snapshot.val()["checked"]]
+    }
+  });
+}
+
+
 function getEmailFromId(friendID) {
   var ref = firebase.database()
   var rootRef = firebase.database().ref('users/' + friendID);
 
   return rootRef.once('value').then(function(snapshot) {
-    console.log("[getEmailFromId | GETTING EMAIL: ")
+    console.log("getEmailFromId | \t GETTING EMAIL: ")
     email = snapshot.child("email").val()
-    console.log(email)
+    console.log("getEmailFromId | \t" + email)
     return email;
   })
 };
 
-// Helper function to get uid from friend google id
+
 function getIdFromEmail(friendEmail) {
-  console.log("FOR MY DEAR FRIEND:")
-  console.log(friendEmail)
+  console.log("getIdFromEmail | \t FOR MY DEAR FRIEND:")
+  console.log("getIdFromEmail | \t" + friendEmail)
   var ref = firebase.database()
   var rootRef = firebase.database().ref('users');
 
@@ -113,49 +131,28 @@ function getIdFromEmail(friendEmail) {
       poss_users.forEach(function(poss_user) {
         poss_user_promises.push(getEmailFromId(poss_user))
       })
+      console.log("getIdFromEmail | poss_user_promises ", poss_user_promises)
+
       return Promise.all(poss_user_promises)
   }).then(function(final_emails) {
-      console.log("FOR FRIEND:")
-      console.log(friendEmail)
-      console.log('final_emails')
-      console.log(final_emails)
-      if(final_emails[0] === friendEmail) {
-        return poss_user_ids[0]
-      } else {
+      console.log("getIdFromEmail | \tFOR FRIEND:")
+      console.log("getIdFromEmail | \t" + friendEmail)
+      console.log("getIdFromEmail | \tfinal_emails")
+      console.log(final_emails[0])
+      if(final_emails[0] === null) {
+        console.log("getIdFromEmail | \t invalid friend")
         return "invalid friend"
+      } else {
+        return poss_user_ids[0]
       }
   });
 }
 
-// Helper function to get score from uid, date, and day
-function getScoreFromId(friendId, date, day) {
-  var date_path = date.split("/").join("");
-  var rootRef = firebase.database().ref(friendId + "/" + day + "/" + date_path);
-  return rootRef.once("value").then(function(snapshot) {
-    console.log("the snapshot val is:::::::::::")
-    console.log(snapshot.val()) //TODO - exceptio handle here! ! !
-    if (snapshot.val() === null) {
-      return ["hasn't finished yet", 0]
-    } else {
-    return [snapshot.val()["time"], snapshot.val()["checked"]]
-    }
-  });
-}
 
-// Background message listener
-// Listens for message from content script + sends to database
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-    var uid = firebase.auth().currentUser.uid;
-    var name = firebase.auth().currentUser.displayName;
-    writeUserData(uid, message['day'], message['date'], message['time'], message['checked']);
-    getFriendsData(uid, message['day'], message['date'])
-});
-
-// Get friends scores
-// let friendscores = document.getElementById('get_friend_score');
 function getFriendsData(userID, day, date) {
+  console.log("getFriendsData | beginning");
   var ref = firebase.database()
-  var friends = getFriendsList(userID)
+  var friends = getFriendsFromID(userID)
   var friend_scores = {}
   friends.then(function(friendList) {
     var friendPromises = []
@@ -168,17 +165,17 @@ function getFriendsData(userID, day, date) {
     friendIdsList.forEach(function(friendId) {
       friendScorePromises.push(getScoreFromId(friendId, date, day))
     })
-    var friends = getFriendsList(userID)
+    var friends = getFriendsFromID(userID)
     friendScorePromises.push(friends)
     return Promise.all(friendScorePromises)
   }).then(function(friendScores) {
     friendNames = friendScores.pop()
     // make it a dictionary
     if (friendScores === null) {
-      console.log("ya they were null")
+      console.log("getFriendsData | \t ya they were null")
       document.getElementById('friend-score-details').textContent = "No friends have reported scores yet!";
     } else {
-    console.log("here are the FRIENDSCORES")
+    console.log("getFriendsData | \there are the FRIENDSCORES")
     console.log(friendScores)
     friendScoresDict = {}
     friendChecksDict = {}
@@ -191,7 +188,7 @@ function getFriendsData(userID, day, date) {
     }
     return friendScores
   }).catch(function (err) {
-    console.log('err', err);
+    console.log('getFriendsData | \terr', err);
   });
 
 }
@@ -208,38 +205,32 @@ function writeUserData(userId, day, date, time, checked) {
   });
   document.getElementById('my-score-details').textContent = "My Score: " + time + " | Checked Status: " + checked; 
 
-  console.log("Finished writing user data to firebase");
+  console.log("writeUserData | \tFinished writing user data to firebase");
 }
 
 function writeUserFriend(userId, friendId) {
   // NOTE - cant save periods so must just use gmail
-  // Argument passed into ref is the path to the database 'file' that you're writing with this info
-  // Should reflect predetermined database schema 
-  // TODO: make sure this user even exists before adding it in?!
+  console.log("writeUserFriend | beginning")
   friendEmail = friendId + "@gmail.com";
-  // firebase.database().ref("/friends/" + userId + "/" + friendId).update({
-  //   value: 1
-  // }); 
-  getIdFromEmail(friendEmail).then(function (friendId) {
-    console.log("FRIEND REQUEST ID: ")
-    console.log(friendId);
-    if(friendId === "invalid friend") {
-      console.log("invalid friend u illiterati")
-    } else { 
+  idEmailPromises = [getIdFromEmail(friendEmail)];
+
+  Promise.all(idEmailPromises).then(function (element) {
+    console.log("writeUserFriend | beginning: ", element);
+    add_friend_success_text = document.getElementById("add_friend_success")
+    if (element[0] === "invalid friend") {
+      // TODO: insert error message into dom saying that person doesn't exist
+      console.log(add_friend_success_text)
+      add_friend_success_text.innerHTML = "User does not exist"
+    } else {
       firebase.database().ref("/friends/" + userId + "/" + friendId).update({
         value: 1
-      }); 
+      });
+      add_friend_success_text.innerHTML = "Success!";
     }
+    
   })
-  console.log("Finished writing to firebase");
 }
 
-function readUserData(userId, day, date, time) {
-  var date_path = date.split("/").join("");
-  firebase.database().ref(userId + "/" + day + "/" + date_path).on( 'value', function(snapshot) {
-    return snapshot.val();
-  });
-}
 
-setInterval(loop_de_loop, 3 * 1000)
+setInterval(loop_de_loop, 20 * 1000)
 

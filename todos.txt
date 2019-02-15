@@ -12,20 +12,25 @@ V 0.0
 - (6) switching from click based add to continuous monitoring <DONE>
 - (7) Monitor for checks <DONE!> 
 - (8) Show all user data for a day (average score, percentiles, etc.)!
+- stop looping repeatedly everywhere...
 
+- ui + popup for diff stats
+	* leaderboard per day
+	* scatterplot (d3) with top score, median, percentile
 
 V 0.1
-- stop looping repeatedly everywhere...
-- ui + popup for diff stats
-- computation of stats
-- show a list of all friends
-- prevent invalid friends
-- populate crossWORLD!!!!
+- make the leaderboard date a choice
 - automatic scraping of old puzzles solved
+
+- show a list of all friends
+- prevent invalid friends <DONE>
+- populate crossWORLD!!!!
+
 - (Almost Eventually) refactor + clean up code to make this make any sense at all
 - (Eventually) chrome store
 - Integrate with downforacross
 - Potentially shift UI to being on the crossword page itself
+
 
 - Think of name
 - Update repo with name
