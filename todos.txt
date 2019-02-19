@@ -24,7 +24,7 @@ V 0.1
 
 - show a list of all friends
 - prevent invalid friends <DONE>
-- populate crossWORLD!!!!
+- populate crossWORLD!!!! <DONE> 
 
 - (Almost Eventually) refactor + clean up code to make this make any sense at all
 - (Eventually) chrome store
