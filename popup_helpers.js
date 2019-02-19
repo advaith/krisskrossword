@@ -51,7 +51,7 @@ function generate_all_urls(type) {
 	var current_yr = 1993;
 	var current_mm = 0;
 	var stop_year = 2019;
-	var stop_month = 11;
+	var stop_month = 12;
 	var days = []
 	var day_strs = []
 
@@ -64,15 +64,15 @@ function generate_all_urls(type) {
 	var today_yr = 2018;
 
 	while (current_yr <= stop_year) {
-		while (current_mm <= stop_month) {
-			if ((current_mm > today_mm) && (current_yr == today_yr)) {
+		while (current_mm < stop_month) {
+			if ((current_mm > today_mm) && (current_yr >= today_yr)) {
 				break;
 			}
 			new_days = getDaysInMonth(current_mm, current_yr)
 			days = days.concat(new_days);
 			current_mm += 1
 		}
-		current_mm = 1
+		current_mm = 0
 		current_yr += 1
 	}
 
