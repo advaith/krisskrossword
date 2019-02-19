@@ -1,8 +1,8 @@
 
 // Content script code - should be moved to a separate js file that listens for existence of native DOM elements
 function scrapeThePage() {
-	 console.log("scrapeThePage | \t beginning");
-    var visited = window.location.href;
+   var visited = window.location.href;
+	 console.log("scrapeThePage | \t beginning: ", visited);
     function checkForChecks() {
       console.log("scrapeThePage | \t checking for ... checks????")
       var all_cells = document.getElementsByClassName('Board-svg--34be-')[0].children[2].children
@@ -30,7 +30,7 @@ function scrapeThePage() {
       chrome.storage.sync.set({day: day});
 	    // Send object to database
 	    chrome.runtime.sendMessage({date: date, time: timeStatus, day: day, checked: checked});
-      return;
+      return 1;
     }
 };	
 
@@ -43,6 +43,50 @@ function loop_de_loop() {
         tabs[0].id,
         {code: scriptToExec});
   });
+}
+
+function scrape_url(urls) {
+  console.log("scrape_url | urls ", urls)
+  url_str = urls.pop();
+  console.log("scrape_url | url string", url_str)
+  console.log("scrape_url | urls afterwards", urls)
+  const scriptToExec = `(${scrapeThePage})()`;
+  const urls_arg = urls;
+  chrome.tabs.update({url: url_str
+    }, function(tab1) {
+
+    // add listener so callback executes only if page loaded. otherwise calls instantly
+    var listener = function(tabId, changeInfo, tab) {
+
+        if (tabId == tab1.id && changeInfo.status === 'complete') {
+            // remove listener, so only run once
+            chrome.tabs.onUpdated.removeListener(listener);
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+               console.log("scrape_url | in the tabs ", urls_arg )
+               console.log("scrape_url | in the tabs ", tabs[0] )
+
+               chrome.tabs.executeScript(
+                  tabs[0].id,
+                  {code: scriptToExec}, function(results) {
+                    console.log("scrape_url | results ", results)
+                    if (urls_arg.length == 0) {
+                      console.log("scrape_url | stopping")
+                      return 1;
+                     } else {
+                      scrape_url(urls_arg);
+                     }
+                  });
+            });
+        }
+    }
+    chrome.tabs.onUpdated.addListener(listener);
+  });
+}
+
+function scrape_all_scores() {
+  var allUrls = generate_all_urls('daily');
+  console.log("scrape_all_scores | starting ", allUrls);
+  scrape_url(allUrls);
 }
 
 // Background message listener
@@ -65,6 +109,12 @@ add_friend_button.onclick = function(element) {
   var uid = firebase.auth().currentUser.uid;
   writeUserFriend(uid, friendId)
   add_friend_input.value = ""
+};
+
+// Scrape button listener
+let scrape_button = document.getElementById("scrape-button")
+scrape_button.onclick = function(element) {
+  scrape_all_scores()
 };
 
 
@@ -264,8 +314,7 @@ function getAllData(userID, day, date) {
     niceHtml = dict_to_table(friendScoresDict, friendChecksDict)
     // document.getElementById('friend-score-details').textContent = "Friend Scores: " + JSON.stringify(friendScoresDict, null, '  ')
     // + "Friend Checks: " + JSON.stringify(friendChecksDict, null, '  ');
-    console.log("THE REAL QUEDSTION IS?!?") 
-    console.log(niceHtml)
+
     document.getElementById('world-score-details').innerHTML = niceHtml;
     }
     return friendScores
@@ -336,5 +385,5 @@ function writeUserFriend(userId, friendId) {
 }
 
 
-setInterval(loop_de_loop, 3 * 1000)
+setInterval(loop_de_loop, 6 * 1000)
 
