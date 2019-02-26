@@ -18,9 +18,15 @@ V 0.0
 	* leaderboard per day
 	* scatterplot (d3) with top score, median, percentile
 
+[ ] make sure the svg only pops up in the right tab
+	fix = change the document element being modified. right no wan svg is added to the DOM arbitrarily
+- bugs
+	[ ] fix the weird scores advaith has reported for times < 1 minute
+		fix = ignore times that are less than 1 minute. if dan feyer can't do it neither can u
+
 V 0.1
 - make the leaderboard date a choice
-- automatic scraping of old puzzles solved
+- automatic scraping of old puzzles solved 
 
 - show a list of all friends
 - prevent invalid friends <DONE>

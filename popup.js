@@ -1,4 +1,3 @@
-
 // Content script code - should be moved to a separate js file that listens for existence of native DOM elements
 function scrapeThePage() {
    var visited = window.location.href;
@@ -117,6 +116,11 @@ scrape_button.onclick = function(element) {
   scrape_all_scores()
 };
 
+let fb_button = document.getElementById("fb-button")
+fb_button.onclick = function(element) {
+  getAllTimes(true);
+}
+
 
 
 
@@ -148,6 +152,54 @@ function getAllEmails() {
       console.log("getAllEmails | \t friends", friends)
       return friends;
   });
+}
+
+function getTimesFromDay(day, include_checked=false) { 
+  console.log("getTimesFromDay | " + day)
+  var ref = firebase.database()
+  var uid = firebase.auth().currentUser.uid
+  var newRoot = firebase.database().ref(uid + '/' + day);
+  // var newRoot = rootRef.child(userId);
+  return newRoot.once('value').then(function(snapshot){
+      times = [];
+      snapshot.forEach(function(_child){
+        var friend_name = _child.key;
+        if (include_checked || _child.val()['checked'] === 0) {
+          times.push(_child.val()['time']);
+        }
+      });
+      // console.log("getTimesFromDay | \t times", day,  times)
+      return times;
+  });
+}
+
+function getAllTimes(include_checked=false) {
+  console.log("getAllTimes | beginning")
+  var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  day_promises = []
+  days.forEach(function(day) {
+    day_promises.push(getTimesFromDay(day, include_checked))
+  }) 
+  console.log(day_promises);
+  Promise.all(day_promises).then(function(data) {
+    // restructure all the data into a list of dictionaries
+    // TODO this is where the graphing function should happen, once the data is all resolved
+    data_dicts = [];
+    data.forEach(function (times, i) {
+      var day = days[i]
+      times.forEach(function(time) {
+        data_dicts.push({'Name': day, 'Value': timeStringToFloat(time)})
+      })
+    })
+    console.log("getAllTimes | ", data_dicts);
+    alltime = 0
+    for(var i=0, l = data_dicts.length; i < l; i++){
+      alltime += data_dicts[i]['Value']
+    }
+    console.log("getAllTimes | total time: ", alltime)
+    drawHistogram(data_dicts)
+
+  })
 }
 
 

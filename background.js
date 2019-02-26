@@ -87,6 +87,3 @@ function getUserDayStats(userId, day) {
 
 
 
-
-
-

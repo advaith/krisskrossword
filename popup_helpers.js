@@ -59,10 +59,6 @@ function generate_all_urls(type) {
 	var today_mm = today.getMonth();
 	var today_yr = today.getFullYear();
 
-	// for debugging purposes
-	var today_mm = 6;
-	var today_yr = 2018;
-
 	while (current_yr <= stop_year) {
 		while (current_mm < stop_month) {
 			if ((current_mm > today_mm) && (current_yr >= today_yr)) {
@@ -83,6 +79,12 @@ function generate_all_urls(type) {
 
 
 	return day_strs;
+}
 
+function timeStringToFloat(time) {
+  var minutesSeconds = time.split(/[.:]/);
+  var minutes = parseInt(minutesSeconds[0], 10);
+  var seconds = minutesSeconds[1] ? parseInt(minutesSeconds[1], 10) : 0;
+  return minutes + seconds / 60;
 }
 

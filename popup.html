@@ -5,7 +5,17 @@
      <link href="https://fonts.googleapis.com/css?family=Alfa+Slab+One" rel="stylesheet">
     <script src="firebase.js"></script>
     <script src="credentials.js"></script>
+    <style>
 
+      .Monday { fill:#0173b2 }
+      .Tuesday { fill: #029e73}
+      .Wednesday { fill: #de8f05}
+      .Thursday { fill: #d55e00}
+      .Friday { fill: #cc78bc}
+      .Saturday { fill: #ca9161}
+      .Sunday { fill: #fbafe4}
+    
+    </style>
   </head>
   <body>
   
@@ -27,6 +37,7 @@
             <!-- <pre><code id="quickstart-account-details">null</code></pre> -->
           </p>
           <button id="scrape-button">scrRRRRRrape </button>
+          <button id="fb-button">get times from fb </button>
 
         </div>
   </div>
@@ -65,7 +76,9 @@
         <img id="world_tab" class="bottom_bar_element" src="./open-iconic-master/svg/globe.svg">
   </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="d3.v5.min.js"></script>
     <script src="popup_helpers.js"></script>
+    <script src="popup_d3.js"></script>
     <script src="popup.js"></script>
 
   </body>
