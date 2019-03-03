@@ -13,6 +13,21 @@ function getAllEmails() {
   });
 }
 
+function getAllIds() {
+  var ref = firebase.database()
+  var newRoot = firebase.database().ref('users');
+  // var newRoot = rootRef.child(userId);
+  return newRoot.once('value').then(function(snapshot){
+      friends = [];
+      snapshot.forEach(function(_child){
+        var friend_id = _child.key;
+        friends.push(friend_id);
+      });
+      console.log("getAllIds | \t friends", friends)
+      return friends;
+  });
+}
+
 function getAllNames() {
   var ref = firebase.database()
   var newRoot = firebase.database().ref('users');
@@ -110,10 +125,13 @@ function getScoreFromId(friendId, date, day) {
 
 function getTimesFromDay(day, include_checked=false, uid=null) { 
   console.log("getTimesFromDay | " + day)
+  console.log("getTimesFromDay | uid ", uid)
+
   var ref = firebase.database()
   if (uid === null) {
-    var uid = firebase.auth().currentUser.uid;
+    uid = firebase.auth().currentUser.uid;
   }
+  console.log("getTimesFromDay | uid ", uid)
   var newRoot = firebase.database().ref(uid + '/' + day);
   // var newRoot = rootRef.child(userId);
   return newRoot.once('value').then(function(snapshot){
@@ -202,4 +220,43 @@ function drawBoxplot(include_checked=true) {
     drawBoxplotD3(groupCounts, globalCounts)
 
   })
+}
+
+function drawScatterplot(day, include_checked=true) {
+  // get all user IDs
+
+  var ref = firebase.database()
+  var allIds = getAllIds()
+  var my_uid = firebase.auth().currentUser.uid;
+  allIds.then(function(id_list) {
+    console.log("drawScatterplot | id list ", id_list);
+    // Move ID to the end of the list
+    shifted_id_list = id_list.slice(0);
+    shifted_id_list.splice(shifted_id_list.indexOf(my_uid), 1);
+    shifted_id_list.push(my_uid)
+    user_promises = []
+    shifted_id_list.forEach(function(id) {
+      user_promises.push(getTimesFromDay(day, include_checked, id))
+    })
+    return Promise.all(user_promises)
+  }).then(function (user_times) {
+     console.log("drawScatterplot | user times ", user_times);
+     data = []
+     current_user_idx = user_times.length-1;
+     user_times.forEach(function(times, i) {
+        cname = "World";
+        y = .15;
+        if (i === current_user_idx) {
+          cname = "Me";
+          y = .15;
+        }
+        times.forEach(function (time) {
+          data.push({'Time': timeStringToFloat(time), 'Type': cname, 'Y': y})
+        })
+     })
+     console.log('drawScatterPlot | ', data)
+     scatterplotD3(data, day)
+  })
+  // remove this user's ID, add that as first list of promises, get all day promises for the given day for each of those IDs
+  // 
 }

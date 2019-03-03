@@ -47,6 +47,10 @@ function initApp() {
       document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
       drawHistogram(true);
       drawBoxplot(true);
+      drawScatterplot("Wednesday", include_checked=true);
+      drawScatterplot("Tuesday", include_checked=true);
+      drawScatterplot("Monday", include_checked=true);
+
       // document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
       // [END_EXCLUDE]
     } else {
