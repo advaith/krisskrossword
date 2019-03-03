@@ -4,6 +4,12 @@
      <link rel="stylesheet" type ="text/css" href="popup.css"></style>
      <link href="https://fonts.googleapis.com/css?family=Alfa+Slab+One" rel="stylesheet">
     <script src="firebase.js"></script>
+    <script src="utils.js"></script>
+    <script src="promise_helpers.js"></script>
+    <script src="d3.v5.min.js"></script>
+    <script src="popup_d3.js"></script>
+    <script src="boxplot.js"></script>
+
     <script src="credentials.js"></script>
     <style>
 
@@ -14,7 +20,7 @@
       .Friday { fill: #cc78bc}
       .Saturday { fill: #ca9161}
       .Sunday { fill: #fbafe4}
-    
+
     </style>
   </head>
   <body>
@@ -29,15 +35,15 @@
 
   <div id="you_tab_content" class="tab_content"> 
       <h2> Account Details </h2>
-       <div class="quickstart-user-details-container">
-          <button id="quickstart-button">Sign-in with Google</button>
+       <div id="you_tab_inner" class="quickstart-user-details-container">
+          <button id="quickstart-button">Sign In</button>
+          <button id="scrape-button">Scrape </button>
+
           <p>
             You are: <span id="quickstart-sign-in-status">Unknown</span>
             <!-- <div>Firebase auth <code>currentUser</code> object value:</div> -->
             <!-- <pre><code id="quickstart-account-details">null</code></pre> -->
           </p>
-          <button id="scrape-button">scrRRRRRrape </button>
-          <button id="fb-button">get times from fb </button>
 
         </div>
   </div>
@@ -45,7 +51,7 @@
 
   <div id="friend_tab_content" class="tab_content"> 
     <h2> Friends </h2>
-    <pre><code id="friend-score-details">null</code></pre>
+    <pre><code id="friend-score-details">You can see your friends' scores once <br> you finish this puzzle!</code></pre>
     <div>
       <div>
         <input type="text" id="add_friend_input"  placeholder="Add friends!" name="friend_u_name">
@@ -76,9 +82,8 @@
         <img id="world_tab" class="bottom_bar_element" src="./open-iconic-master/svg/globe.svg">
   </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-    <script src="d3.v5.min.js"></script>
-    <script src="popup_helpers.js"></script>
-    <script src="popup_d3.js"></script>
+    <script src="tab_helpers.js"></script>
+
     <script src="popup.js"></script>
 
   </body>
