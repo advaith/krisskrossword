@@ -117,86 +117,6 @@ scrape_button.onclick = function(element) {
 };
 
 
-function getAllNames() {
-  var ref = firebase.database()
-  var newRoot = firebase.database().ref('users');
-  // var newRoot = rootRef.child(userId);
-  return newRoot.once('value').then(function(snapshot){
-      friends = [];
-      snapshot.forEach(function(_child){
-        var friend_name = _child.key;
-        friends.push(_child.val()['name']);
-      });
-      console.log("getAllEmails | \t friends", friends)
-      return friends;
-  });
-}
-
-// Helper function to get score from uid, date, and day
-function getScoreFromId(friendId, date, day) {
-  var date_path = date.split("/").join("");
-  var rootRef = firebase.database().ref(friendId + "/" + day + "/" + date_path);
-  return rootRef.once("value").then(function(snapshot) {
-    console.log("getScoreFromId | \t the snapshot val is:::::::::::")
-    console.log("getScoreFromId | \t" + snapshot.val()) //TODO - exception handle here! ! !
-    if (snapshot.val() === null) {
-      return ["hasn't finished yet", 0]
-    } else {
-    return [snapshot.val()["time"], snapshot.val()["checked"]]
-    }
-  });
-}
-
-
-function getEmailFromId(friendID) {
-  var ref = firebase.database()
-  var rootRef = firebase.database().ref('users/' + friendID);
-  console.log("getEmailFromId | \t GETTING EMAIL FOR: ", friendID)
-
-  return rootRef.once('value').then(function(snapshot) {
-    email = snapshot.child("email").val()
-
-    console.log("getEmailFromId | \t EMAIL: ", email)
-    return email;
-  })
-};
-
-
-function getIdFromEmail(friendEmail) {
-  console.log("getIdFromEmail | \t beginning FOR MY DEAR FRIEND:", friendEmail)
-  var ref = firebase.database()
-  var rootRef = firebase.database().ref('users');
-
-  return rootRef.orderByChild('email').equalTo(friendEmail).once("value").then(function(snapshot) {
-        poss_user_ids = []
-        snapshot.forEach((function(child) {
-          poss_user_ids.push(child.key)
-        })) 
-        console.log("getIdFromEmail | \t poss_user_ids: ", poss_user_ids)
-        return [poss_user_ids[0]]
-  }).then(function(poss_users) {
-      poss_user_promises = []
-      poss_users.forEach(function(poss_user) {
-        poss_user_promises.push(getEmailFromId(poss_user))
-      })
-      console.log("getIdFromEmail | \t poss user id second promise: ", poss_users[0])
-      poss_user_promises.push(poss_users[0])
-      return Promise.all(poss_user_promises)
-  }).then(function(final_elements) {
-      poss_user_id = final_elements.pop()
-      final_emails = final_elements[0]
-
-      console.log("getIdFromEmail | \tfinal_email: ", final_emails)
-      console.log("getIdFromEmail | \t poss_user_id: ", poss_user_id)
-      if(final_emails === null) {
-        console.log("getIdFromEmail | \t invalid friend")
-        //return "invalid friend"
-      } else {
-        return poss_user_id
-      }
-  });
-}
-
 
 function getFriendsData(userID, day, date) {
   console.log("getFriendsData | beginning");
@@ -241,14 +161,6 @@ function getFriendsData(userID, day, date) {
   });
 
 }
-
-// function convertTimeStringtoSeconds(time) {
-//   var minutes = int(time[0:2])
-//   var seconds = int(time[3:])
-//   var time = (minutes * 60) + seconds
-//   return time
-// }
-
 
 function getAllData(userID, day, date) {
   console.log("getAllData | beginning");
@@ -297,30 +209,6 @@ function getAllData(userID, day, date) {
 
 }
 
-
-
-
-function dict_to_table(scoreDict, checkDict) {
-  var html = '<table style="width:100%">'
-  html += '<tr>'
-  html += '<th>Name</th>'
-  html += '<th>Time</th>' 
-  html += '<th>Checked Status</th>'
-  html += '</tr>'
-
-  for(var uid in scoreDict) {
-    html += '<tr>'
-    var score = scoreDict[uid]
-    var check = checkDict[uid]
-    html += '<td>' + uid + '</td>'
-    html += '<td>' + score + '</td>'
-    html += '<td>' + check + '</td>'
-    html += '</tr>'
-  }
-  html += '</table>'
-  return html
-}
-
 // Database write
 // User information --> database entry
 function writeUserData(userId, day, date, time, checked) {
@@ -359,5 +247,3 @@ function writeUserFriend(userId, friendId) {
 
 
 setInterval(loop_de_loop, 3 * 1000)
-// getAllTimes(true)
-

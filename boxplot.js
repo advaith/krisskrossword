@@ -32,8 +32,7 @@ function drawBoxplotD3(groupCounts=null, globalCounts=null) {
   }
 
   // Setup a color scale for filling each box
-  var colorScale = d3.scaleOrdinal(["#0173b2", "#029e73", "#de8f05","#d55e00" , "#cc78bc", "#ca9161", "#fbafe4"]
-)
+  var colorScale = d3.scaleOrdinal(["#0173b2", "#029e73", "#de8f05","#d55e00" , "#cc78bc", "#ca9161", "#fbafe4"])
     .domain(Object.keys(groupCounts));
 
   // Prepare the data for the box plots

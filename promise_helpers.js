@@ -1,17 +1,3 @@
-function getFriendsFromID(userId) {
-  var ref = firebase.database()
-  var rootRef = firebase.database().ref('friends');
-  var newRoot = rootRef.child(userId);
-  return newRoot.once('value').then(function(snapshot){
-      friends = [];
-      snapshot.forEach(function(_child){
-          var friend_name = _child.key;
-          friends.push(friend_name + "@gmail.com");
-      });
-      return friends;
-  });
-}
-
 function getAllEmails() {
   var ref = firebase.database()
   var newRoot = firebase.database().ref('users');
@@ -26,6 +12,101 @@ function getAllEmails() {
       return friends;
   });
 }
+
+function getAllNames() {
+  var ref = firebase.database()
+  var newRoot = firebase.database().ref('users');
+  // var newRoot = rootRef.child(userId);
+  return newRoot.once('value').then(function(snapshot){
+      friends = [];
+      snapshot.forEach(function(_child){
+        var friend_name = _child.key;
+        friends.push(_child.val()['name']);
+      });
+      console.log("getAllEmails | \t friends", friends)
+      return friends;
+  });
+}
+
+
+function getEmailFromId(friendID) {
+  var ref = firebase.database()
+  var rootRef = firebase.database().ref('users/' + friendID);
+  console.log("getEmailFromId | \t GETTING EMAIL FOR: ", friendID)
+
+  return rootRef.once('value').then(function(snapshot) {
+    email = snapshot.child("email").val()
+
+    console.log("getEmailFromId | \t EMAIL: ", email)
+    return email;
+  })
+};
+
+
+function getIdFromEmail(friendEmail) {
+  console.log("getIdFromEmail | \t beginning FOR MY DEAR FRIEND:", friendEmail)
+  var ref = firebase.database()
+  var rootRef = firebase.database().ref('users');
+
+  return rootRef.orderByChild('email').equalTo(friendEmail).once("value").then(function(snapshot) {
+        poss_user_ids = []
+        snapshot.forEach((function(child) {
+          poss_user_ids.push(child.key)
+        })) 
+        console.log("getIdFromEmail | \t poss_user_ids: ", poss_user_ids)
+        return [poss_user_ids[0]]
+  }).then(function(poss_users) {
+      poss_user_promises = []
+      poss_users.forEach(function(poss_user) {
+        poss_user_promises.push(getEmailFromId(poss_user))
+      })
+      console.log("getIdFromEmail | \t poss user id second promise: ", poss_users[0])
+      poss_user_promises.push(poss_users[0])
+      return Promise.all(poss_user_promises)
+  }).then(function(final_elements) {
+      poss_user_id = final_elements.pop()
+      final_emails = final_elements[0]
+
+      console.log("getIdFromEmail | \tfinal_email: ", final_emails)
+      console.log("getIdFromEmail | \t poss_user_id: ", poss_user_id)
+      if(final_emails === null) {
+        console.log("getIdFromEmail | \t invalid friend")
+        //return "invalid friend"
+      } else {
+        return poss_user_id
+      }
+  });
+}
+
+function getFriendsFromID(userId) {
+  var ref = firebase.database()
+  var rootRef = firebase.database().ref('friends');
+  var newRoot = rootRef.child(userId);
+  return newRoot.once('value').then(function(snapshot){
+      friends = [];
+      snapshot.forEach(function(_child){
+          var friend_name = _child.key;
+          friends.push(friend_name + "@gmail.com");
+      });
+      return friends;
+  });
+}
+
+// Helper function to get score from uid, date, and day
+function getScoreFromId(friendId, date, day) {
+  var date_path = date.split("/").join("");
+  var rootRef = firebase.database().ref(friendId + "/" + day + "/" + date_path);
+  return rootRef.once("value").then(function(snapshot) {
+    console.log("getScoreFromId | \t the snapshot val is:::::::::::")
+    console.log("getScoreFromId | \t" + snapshot.val()) //TODO - exception handle here! ! !
+    if (snapshot.val() === null) {
+      return ["hasn't finished yet", 0]
+    } else {
+    return [snapshot.val()["time"], snapshot.val()["checked"]]
+    }
+  });
+}
+
 
 function getTimesFromDay(day, include_checked=false, uid=null) { 
   console.log("getTimesFromDay | " + day)
@@ -103,6 +184,12 @@ function drawBoxplot(include_checked=true) {
         groupCounts[day.substring(0, 2)].push(timeStringToFloat(time));
         globalCounts.push(timeStringToFloat(time));
       })
+    })
+
+    days.forEach(function(day) {
+      if (groupCounts[day].length === 0) {
+        groupCounts[day].push(0);
+      }
     })
     console.log("drawBoxplot | ", groupCounts);
     console.log("drawBoxplot | ", globalCounts);

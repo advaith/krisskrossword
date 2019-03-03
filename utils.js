@@ -62,3 +62,23 @@ function timeStringToFloat(time) {
   return minutes + seconds / 60;
 }
 
+function dict_to_table(scoreDict, checkDict) {
+  var html = '<table style="width:100%">'
+  html += '<tr>'
+  html += '<th>Name</th>'
+  html += '<th>Time</th>' 
+  html += '<th>Checked Status</th>'
+  html += '</tr>'
+
+  for(var uid in scoreDict) {
+    html += '<tr>'
+    var score = scoreDict[uid]
+    var check = checkDict[uid]
+    html += '<td>' + uid + '</td>'
+    html += '<td>' + score + '</td>'
+    html += '<td>' + check + '</td>'
+    html += '</tr>'
+  }
+  html += '</table>'
+  return html
+}
