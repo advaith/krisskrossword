@@ -187,8 +187,8 @@ function drawBoxplot(include_checked=true) {
     })
 
     days.forEach(function(day) {
-      if (groupCounts[day].length === 0) {
-        groupCounts[day].push(0);
+      if (groupCounts[day.substring(0, 2)].length === 0) {
+        groupCounts[day.substring(0, 2)].push(0);
       }
     })
     console.log("drawBoxplot | ", groupCounts);
