@@ -50,7 +50,7 @@ function scatterplotD3(data, day) {
         .attr("x", 0)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text(day + "s")
+        .text(day.substring(0, 3))
 
 
 

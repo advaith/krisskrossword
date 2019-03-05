@@ -1,52 +1,32 @@
-12.19.2018
---
-(documentation on changes and thoughts)
+nitpicky things
 
-https://howtofirebase.com/firebase-data-modeling-939585ade7f4
-^ helpful for thinking about how to structure database; i'm thinking the following schema could be scalable to our queries:
+overall
+[ ] fix spacing in world tab
+[ ] debug 1 minute thing
+[ ] incorporate a rolling average somewhere - probably in creating the world plot
+[ ] script to scrape all past scores instead of chrome-app-based thing
+[ ] event driven updates instead of continuous polling 
+    # this could mean a listener on your friends' score nodes, which redraws all graphs that would be affected by an incoming score
+    # chrome local storage variable to decide wehther or not to bind listener for completed crossword.
+      aka if this variable is true, don't do anything and store this day's score locally
+      if its not, listen for this event and write once
 
-{ 
-  // list of users
-  users: {
-	user1: {
-		// user specific details - name, email, # of times they've signed on, etc 
-	},
-	user2: {
+you tab
+[ ] add option to toggle between histogram and box plot
+[ ] then include a trend chart of times over the weeks for different days 
+[ ] debug graphs so that if there's no data, the graphs aren't rendered
 
-	}
-  },
+world tab
+[ ] center y axis labels
+[ ] add horizontal graph of today's times from the world 
+[ ] include only last 30 scores for each user;
 
-  // list of user directories
-  user1: {
-  	monday: {
-  		*date*: {
-  			time: 
-  			completed:
-  			checks_used:
-  		}
-  	},
-  	tuesday: {
+friend tab
+[ ] add graph of improvement over last 15 of those days (15 week) or even 10, so it's a 10 week rolling average
+      (conditioned on day), ending in today's puzzle if you've finished it
 
-  	},
-  	...,
-  	sunday: {
+tab bar
+[ ] fix spacing 
 
-  	}
-  },
-  user2: {
 
-  }
-}
-
-firebase has nice functions for:
-	1) listening for changes in certain nodes - this just means listening for a childAdded event on any of your friends nodes
-	2) querying across entire nodes - getting a user's average time across mondays would be one line
-
-changes: 
-* writing to the database in popup.js, in the writeUserData function
-	- overwrites the same path each time, gotta change it based on the schema if u think this makes sense
-* credentials.js & background.js handle the google sign-in, which gives us a UID to store user data under
-*  hanges to manifest json 
-	1) whitelist website requests using the Content Policy Directive
-	2) include our OAuth information
-	3) include the app public key 
+question: what's the daily reward of checking into the extension? there's the one-time intrigue of the graph generation but past that, is competing with your friends enough to bring you back to teh app every day?
