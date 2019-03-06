@@ -10,6 +10,8 @@ overall
     # chrome local storage variable to decide wehther or not to bind listener for completed crossword.
       aka if this variable is true, don't do anything and store this day's score locally
       if its not, listen for this event and write once
+[ ] make checked status an emoji
+[ ] fix reporting edge cases
 
 you tab
 [ ] add option to toggle between histogram and box plot
@@ -20,11 +22,12 @@ world tab
 [ ] center y axis labels
 [ ] add horizontal graph of today's times from the world 
 [ ] include only last 30 scores for each user;
+[ ] why does tuesday not show up
 
 friend tab
 [ ] add graph of improvement over last 15 of those days (15 week) or even 10, so it's a 10 week rolling average
       (conditioned on day), ending in today's puzzle if you've finished it
-
+[ ] make sure you can't add friends that don't exist :( ..... . . tbt
 tab bar
 [ ] fix spacing 
 
