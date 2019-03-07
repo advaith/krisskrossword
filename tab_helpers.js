@@ -5,10 +5,12 @@ function show_tab(tab_name) {
 		tab = document.getElementById(el_name);
 		if (el_name == tab_name) {
 			content.style.display = "block";
-			tab.style.border = "1px solid grey";
+			tab.classList.add("selected");
+			// tab.style.border = "1px solid grey";
 		} else {
 			content.style.display = "none";
-			tab.style.border = "1px solid transparent";
+			tab.classList.remove("selected");
+			// tab.style.border = "1px solid transparent";
 		}
 	})
 }
@@ -22,3 +24,8 @@ world_tab = document.getElementById('world_tab')
 you_tab.onclick = function() {show_tab('you_tab')};
 friend_tab.onclick = function () {show_tab('friend_tab')};
 world_tab.onclick = function () {show_tab('world_tab')};
+
+// should use $(document).ready() but we don't have jquery
+// ensuring that this file is imported at the bottom of 
+// the html is fine too. 
+show_tab('you_tab');
