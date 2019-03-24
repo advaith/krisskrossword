@@ -1,13 +1,21 @@
 body {
 	width: 350px;
 	height: 520px;
+	font-family: monospace;
 }
 
  button {
     height: 25px;
     width: 80px;
-    outline: none;
-  }
+	outline: none;
+	font-family: monospace;
+	border-radius: 2px;
+}
+
+#add_friend_input {
+	font-family: monospace;
+	padding: 4px;
+}
 
 .title {
 	font-family: 'Alfa Slab One';
@@ -15,38 +23,31 @@ body {
 	font-size: 30px;
 }
 
-.bottom_bar_element {
-	width: 25%;
-	float: left;
-	height: 50px;
-	margin: 2px;
-	padding: 8px;
-	text-align: center;
-	border: 1px solid transparent;
-
-}
-
 .bottom_bar {
 	width: 100%;
 	position: fixed;
 	left: 0px;
 	bottom: 0px;
+	display: flex;
+	flex-direction: row;
+	border-top: 1px solid grey;
 }
 
-#you_tab {
-	border: 1px solid grey;
+.bottom_bar a {
+	width: 33%;
+	padding: 1em;
+	font-size: 1.2em;
+	font-family: monospace;
+	text-align: center;
+	margin: 2px;
+	border-radius: 2px;
 }
 
-
-#friend_tab_content {
-	display: none ;
+.selected{
+	background-color: lightgray;
+	font-weight: bold;
 }
 
-#world_tab_content {
-	display: none ;
-}
-
-
-.bottom_bar_element:hover {
+.bottom_bar a:hover {
 	background: gainsboro;
 }

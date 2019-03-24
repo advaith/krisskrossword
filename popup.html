@@ -23,6 +23,7 @@
       .Sunday { fill: #fbafe4}
 
     </style>
+    <meta charset="utf-8"/>
   </head>
   <body>
   
@@ -30,7 +31,7 @@
 
     <!-- <button id="report">report score</button> -->
     <!-- <button id="get_friend_score">get friend scores</button> -->
-    <pre><code id="my-score-details">My Score: null</code></pre>
+    <h3 id="my-score-details">My Score: null</h3>
 
 
 
@@ -52,12 +53,10 @@
 
   <div id="friend_tab_content" class="tab_content"> 
     <h2> Friends </h2>
-    <pre><code id="friend-score-details">You can see your friends' scores once <br> you finish this puzzle!</code></pre>
+    <p id="friend-score-details">You can see your friends' scores once <br> you finish this puzzle!</p>
     <div>
       <div>
         <input type="text" id="add_friend_input"  placeholder="Add friends!" name="friend_u_name">
-      </div>
-      <div>
         <button id="add_friend_button">Submit</button>
       </div>
       <div class="add_friend">
@@ -78,17 +77,17 @@
 
 
   <div class="bottom_bar">
-    <hr>
-        <img id="you_tab" class="bottom_bar_element" src="./open-iconic-master/svg/eye.svg">
-        <img id="friend_tab" class="bottom_bar_element" src="./open-iconic-master/svg/people.svg">
-        <img id="world_tab" class="bottom_bar_element" src="./open-iconic-master/svg/globe.svg">
+    <a id="you_tab">😍<br> me </a>
+    <a id="friend_tab">👭<br> friends </a>
+    <a id="world_tab">🌍<br> world </a>
   </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-    <script src="tab_helpers.js"></script>
 
-    <script src="popup.js"></script>
+  <!-- SCRIPTS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script src="tab_helpers.js"></script>
+  <script src="popup.js"></script>
 
-  </body>
+</body>
 </html>
 
 
