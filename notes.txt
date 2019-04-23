@@ -1,39 +1,41 @@
 nitpicky things
 
 overall
-[ ] event driven updates instead of continuous polling 
+[X] make checked status an emoji - really we could just take this line out
+[X] event driven updates instead of continuous polling 
     # this could mean a listener on your friends' score nodes, which redraws all graphs that would be affected by an incoming score
     # chrome local storage variable to decide wehther or not to bind listener for completed crossword.
       aka if this variable is true, don't do anything and store this day's score locally
       if its not, listen for this event and write once
-[ ] make checked status an emoji - really we could just take this line out
-[ ] fix reporting edge cases
 
-
-unnecessary for publishing?
-[ ] debug 1 minute thing?
-[ ] script to scrape all past scores instead of chrome-app-based thing
+	**not necessary
+	[ ] debug 1 minute thing?
+	[ ] script to scrape all past scores instead of chrome-app-based thing
 
 
 you tab
 [X] add option to toggle between histogram and box plot
 [X] debug graphs so that if there's no data, the graphs aren't rendered
+[X] keep today's score visible even when you navigate away from the page
 [ ] add a checkbox for showing crosswords you used checks for
-
-[ ] then include a trend chart of times over the weeks for different days 
-	- prob not enough data for this for most people, so gonna hold off on it
+	**not necessary
+	[ ] then include a trend chart of times over the weeks for different days 
+		- prob not enough data for this for most people, so gonna hold off on it
 
 world tab
 [X] include only last 30 scores for each user;
 [X] center y axis labels
 [X] why does tuesday not show up
 
-[ ] add horizontal graph of today's times from the world 
+	**not necessary
+	[ ] add horizontal graph of today's times from the world 
 
 friend tab
-[ ] add graph of improvement over last 15 of those days (15 week) or even 10, so it's a 10 week rolling average
-      (conditioned on day), ending in today's puzzle if you've finished it
-[ ] make sure you can't add friends that don't exist :( ..... . . tbt
+[X] make sure you can't add friends that don't exist :( ..... . . tbt
+
+	**not necessary
+	[ ] add graph of improvement over last 15 of those days (15 week) or even 10, so it's a 10 week rolling average
+	      (conditioned on day), ending in today's puzzle if you've finished it
 
 tab bar
 [X] fix spacing (thanks neena)

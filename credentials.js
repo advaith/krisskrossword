@@ -130,10 +130,10 @@ function eval_page() {
   chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
     var url = tabs[0].url;
     console.log(url.includes("game"))
+    var url_els = url.split('/')
+    n_url_els = url_els.length
+    var date_els = url_els.slice(n_url_els-3, n_url_els)
     if (url.includes('game')) {
-      var url_els = url.split('/')
-      n_url_els = url_els.length
-      var date_els = url_els.slice(n_url_els-3, n_url_els)
       var date = date_els.join("");
     } else {
       console.log("eval_page | URL does NOT include game");
