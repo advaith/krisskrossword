@@ -21,6 +21,8 @@ firebase.initializeApp(config);
  *
  * When signed in, we also authenticate to the Firebase Realtime Database.
  */
+
+var looping_interval;
 function initApp() {
   // Listen for auth state changes.
   // [START authstatelistener]
@@ -49,9 +51,13 @@ function initApp() {
       drawScatterplot("Wednesday", include_checked=true);
       drawScatterplot("Tuesday", include_checked=true);
       drawScatterplot("Monday", include_checked=true);
-
+      writeDates();
+      eval_page();
       // document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
       // [END_EXCLUDE]
+
+      // get all the initialized firebase nodes under a user
+
     } else {
       // Let's try to get a Google auth token programmatically.
       // [START_EXCLUDE]
@@ -117,3 +123,67 @@ function startSignIn() {
 window.onload = function() {
   initApp();
 };
+
+function eval_page() {
+  var uid = firebase.auth().currentUser.uid;
+  var day_dict = {0: 'Sunday', 1: 'Monday', 2: 'Tuesday', 3:'Wednesday', 4:'Thursday', 5:'Friday', 6:'Saturday'}
+  chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+    var url = tabs[0].url;
+    console.log(url.includes("game"))
+    if (url.includes('game')) {
+      var url_els = url.split('/')
+      n_url_els = url_els.length
+      var date_els = url_els.slice(n_url_els-3, n_url_els)
+      var date = date_els.join("");
+    } else {
+      console.log("eval_page | URL does NOT include game");
+      var d = new Date();
+      var date = yyyymmdd(d);
+      date = date.split("/").join("");
+    }
+    
+    obj = {}
+    obj[date] = 'undefined'
+    console.log("eval_page | query: ", obj);
+    chrome.storage.local.get(obj, function(data) {
+      if (data[date] === 'undefined') {
+        if (url.includes('game')) {
+          console.log("eval_page | undefined; going to do continuous polling : ", data);
+          document.getElementById('my-score-details').textContent = "Today's Time: " + "??" 
+          looping_interval = setInterval(loop_de_loop, 3 * 1000)
+        }
+      } else {
+        console.log("eval_page | worked! : ", data);
+        document.getElementById('my-score-details').textContent = "Today's Time: " + data[date] 
+
+        console.log("eval page| d ",date_els[0], date_els[1], date_els[2])
+        d = new Date(date_els[0], date_els[1], date_els[2]);
+        console.log("eval page| d ", d);
+
+        day = day_dict[d.getDay()]
+        console.log("eval page | ", day)
+        getFriendsData(uid, day, date)
+        getAllData(uid, day, date)
+      }
+      
+    })
+  });
+}
+
+function loop_de_loop() {
+  console.log("loop_de_loop | starting");
+  const scriptToExec = `(${scrapeThePage})()`;
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+     chrome.tabs.executeScript(
+        tabs[0].id,
+        {code: scriptToExec}, 
+        function(results) {
+          console.log("loop_de_loop | result ", results)
+          if (results[0] == 1) {
+            console.log("loop_de_loop | clearing the interval!")
+            clearInterval(looping_interval);
+          }
+        });
+  });
+}
+

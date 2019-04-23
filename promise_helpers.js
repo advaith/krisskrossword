@@ -180,6 +180,46 @@ function getTimesFromDay(day, include_checked=false, uid=null, limit=false) {
   });
 }
 
+function getDatesFromDay(day, uid=null) {
+  var ref = firebase.database()
+  if (uid === null) {
+    uid = firebase.auth().currentUser.uid;
+  }
+  console.log("getTimesFromDay | uid ", uid)
+  var newRoot = firebase.database().ref(uid + '/' + day);
+
+  return newRoot.once('value').then(function(snapshot){
+      keys = [];
+      snapshot.forEach(function(_child){
+        keys.push({'date': _child['key'], 'time': _child.val()['time']})
+      });
+      return keys;
+  });
+}
+
+function writeDates(uid=null) { 
+  var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  var ref = firebase.database()
+  if (uid === null) {
+    uid = firebase.auth().currentUser.uid;
+  }
+  dayPromises = []
+  days.forEach(function(day) {
+    dayPromises.push(getDatesFromDay(day));
+  })
+  console.log("writeDates | ", dayPromises)
+
+  Promise.all(dayPromises).then(function(data) {
+    data.forEach(function(datarow) {
+      datarow.forEach(function(element) {
+        var date = element['date'];
+        var obj= {};
+        obj[date] = element['time']
+        chrome.storage.local.set(obj)
+      })
+    })
+  })
+}
 
 
 function drawHistogram(include_checked=false) {

@@ -25,24 +25,12 @@ function scrapeThePage() {
 	    var day = document.querySelector("div.PuzzleDetails-date--1HNzj").children[0].textContent.slice(0, -1);
 	    console.log("scrapeThePage | \t timestatus: " + timeStatus)
       var checked = checkForChecks()
-      chrome.storage.sync.set({date: date});
-      chrome.storage.sync.set({day: day});
 	    // Send object to database
 	    chrome.runtime.sendMessage({date: date, time: timeStatus, day: day, checked: checked});
       return 1;
     }
 };	
 
-
-function loop_de_loop() {
-  console.log("loop_de_loop | starting");
-  const scriptToExec = `(${scrapeThePage})()`;
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-     chrome.tabs.executeScript(
-        tabs[0].id,
-        {code: scriptToExec});
-  });
-}
 
 function scrape_url(urls) {
   console.log("scrape_url | urls ", urls)
@@ -220,13 +208,17 @@ function writeUserData(userId, day, date, time, checked) {
 	    time: time,
       checked: checked
   });
+  obj = {};
+  obj[date_path] = time;
+  chrome.local.storage.set(obj);
   console.log("writeUserData | checked val", checked)
-  if (checked == 0) {
-    entry = "💪";
-  } else {
-    entry = "💩";
-  }
-  document.getElementById('my-score-details').textContent = "Time: " + time + " | Checked: " + entry; 
+  // TODO: would involve storing an extra piece of info in chrome local storage to stop from polling
+  // if (checked == 0) {
+  //   entry = "💪";
+  // } else {
+  //   entry = "💩";
+  // }
+  document.getElementById('my-score-details').textContent = "Time: " + time 
 
   console.log("writeUserData | \tFinished writing user data to firebase");
 }
@@ -263,5 +255,3 @@ function writeUserFriend(userId, friendId) {
   
 }
 
-
-setInterval(loop_de_loop, 3 * 1000)
