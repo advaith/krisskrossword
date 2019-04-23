@@ -79,3 +79,36 @@ body {
 td {
 	text-align: center;
 }
+
+.day_averages {
+	width: 100%;
+	margin: auto;
+	display:flex;
+}
+
+.day_averages table {
+	text-align: center;
+	margin: auto;
+	margin-bottom: 20px;
+}
+
+.friend_score_table {
+    width: 716px; /* 140px * 5 column + 16px scrollbar width */
+    border-spacing: 0;
+}
+
+.friend_score_table tbody, thead tr { display: block; }
+
+.friend_score_table tbody {
+    height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.friend_score_table tbody td, thead th {
+    width: 115px;
+}
+
+.friend_score_table thead th:last-child {
+    width: 120; /* 140px + 16px scrollbar width */
+}

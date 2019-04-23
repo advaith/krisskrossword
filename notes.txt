@@ -18,7 +18,10 @@ you tab
 [X] debug graphs so that if there's no data, the graphs aren't rendered
 [X] keep today's score visible even when you navigate away from the page
 [ ] add a checkbox for showing crosswords you used checks for
+
 	**not necessary
+	[X] table of average times for each day over the last two months
+	[ ] change from decimals to common sense numbers
 	[ ] then include a trend chart of times over the weeks for different days 
 		- prob not enough data for this for most people, so gonna hold off on it
 
@@ -32,8 +35,11 @@ world tab
 
 friend tab
 [X] make sure you can't add friends that don't exist :( ..... . . tbt
+[X] checked to see if the table will scroll
+
 
 	**not necessary
+	[ ] add your time to the list of your friend's times
 	[ ] add graph of improvement over last 15 of those days (15 week) or even 10, so it's a 10 week rolling average
 	      (conditioned on day), ending in today's puzzle if you've finished it
 

@@ -31,12 +31,11 @@
 
     <!-- <button id="report">report score</button> -->
     <!-- <button id="get_friend_score">get friend scores</button> -->
-    <h3 id="my-score-details">My Score: null</h3>
+    <h3 id="my-score-details"></h3>
 
 
 
   <div id="you_tab_content" class="tab_content"> 
-      <h2> Account Details </h2>
        <div id="you_tab_inner" class="quickstart-user-details-container">
           <button id="quickstart-button">Sign In</button>
           <button id="scrape-button">Scrape </button>
@@ -46,12 +45,38 @@
             <!-- <div>Firebase auth <code>currentUser</code> object value:</div> -->
             <!-- <pre><code id="quickstart-account-details">null</code></pre> -->
           </p>
+          <div class="day_averages">
+            <table style="width:100%">
+              <tr>
+                <th> M </th>
+                <th> T </th>
+                <th> W </th>
+                <th> T </th>
+                <th> F </th>
+                <th> S </th>
+                <th> S </th>
+              </tr>
+              <tr>
+                <td id="Monday-average"></td>
+                <td id="Tuesday-average"></td>
+                <td id="Wednesday-average"></td>
+                <td id="Thursday-average"></td>
+                <td id="Friday-average"></td>
+                <td id="Saturday-average"></td>
+                <td id="Sunday-average"></td>
+                
+              </tr>
+            </table>
+          </div>
           <div class="plot_opts">
             <a id="histogram_tab"> histogram  </a>
             <a id="boxplot_tab">boxplot </a>
           </div>
           <div id="histogram_tab_content" class="plot_content"></div>
           <div id="boxplot_tab_content" class="plot_content"></div>
+
+          
+
         </div>
         
   </div>

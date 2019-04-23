@@ -52,7 +52,9 @@ function initApp() {
       drawScatterplot("Tuesday", include_checked=true);
       drawScatterplot("Monday", include_checked=true);
       writeDates();
+      writeDayAverages();
       eval_page();
+
       // document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
       // [END_EXCLUDE]
 

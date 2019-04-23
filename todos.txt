@@ -28,6 +28,7 @@ V 0.1
 - make the leaderboard date a choice
 - automatic scraping of old puzzles solved 
 
+
 - show a list of all friends <DONE>
 - prevent invalid friends <DONE>
 - populate crossWORLD!!!! <DONE> 
@@ -36,4 +37,7 @@ V 0.1
 - (Eventually) chrome store
 - Integrate with downforacross
 - Potentially shift UI to being on the crossword page itself
+
+V2 
+- allowed to make a nongmail account
 

@@ -14,10 +14,10 @@ function sortNumber(a,b) {
 function drawBoxplotD3(groupCounts=null, globalCounts=null) {
   console.log('running draw boxplot');
   var width = 300;
-  var height = 240;
+  var height = 220;
   var barWidth = 30;
 
-  var margin = {top: 20, right: 50, bottom: 20, left: 10};
+  var margin = {top: 20, right: 50, bottom: 50, left: 10};
 
   var width = width - margin.left - margin.right,
       height = height - margin.top - margin.bottom;

@@ -1,8 +1,8 @@
 function drawHistogramD3(data) {	
 	//SVG setup
-	const margin = {top: 15, right: 15, bottom: 80, left: 15},
+	const margin = {top: 15, right: 15, bottom: 50, left: 15},
 	      width = 350 - margin.left - margin.right,
-	      height = 240 - margin.top - margin.bottom;
+	      height = 220 - margin.top - margin.bottom;
 
 	//x scales
 	//TODO: make the upper most value the minimum between 180 and the max value that exists in the data

@@ -5,7 +5,6 @@ function getAllEmails() {
   return newRoot.once('value').then(function(snapshot){
       friends = [];
       snapshot.forEach(function(_child){
-        var friend_name = _child.key;
         friends.push(_child.val()['email']);
       });
       console.log("getAllEmails | \t friends", friends)
@@ -35,7 +34,6 @@ function getAllNames() {
   return newRoot.once('value').then(function(snapshot){
       friends = [];
       snapshot.forEach(function(_child){
-        var friend_name = _child.key;
         friends.push(_child.val()['name']);
       });
       console.log("getAllEmails | \t friends", friends)
@@ -143,7 +141,8 @@ function getScoreFromId(friendId, date, day) {
 }
 
 
-function getTimesFromDay(day, include_checked=false, uid=null, limit=false) { 
+function getTimesFromDay(day, include_checked=false, uid=null, limit=20) { 
+  // pass in -1 for the limit to get all times 
   console.log("getTimesFromDay | " + day)
   console.log("getTimesFromDay | uid ", uid)
 
@@ -158,24 +157,18 @@ function getTimesFromDay(day, include_checked=false, uid=null, limit=false) {
   var m = d.getMonth();
   var y = d.getYear();
   var prev_m = (m+12-1) % 12;
-  return newRoot.once('value').then(function(snapshot){
+  return newRoot.orderByKey().once('value').then(function(snapshot){
       times = [];
       snapshot.forEach(function(_child){
-        var friend_name = _child.key;
         if (include_checked || _child.val()['checked'] === 0) {
-          var curr_m = parseInt(_child['key'][5])
-          var curr_y = parseInt(_child['key'].slice(0, 4)) - 1900
-          if (limit) {
-            // Check if date falls within the last two months
-            if (((curr_m == m) || (curr_m == prev_m)) && (curr_y == y)) {
-              times.push(_child.val()['time']);
-            }
-          } else {
-            times.push(_child.val()['time']);
-          }
+          times.push(_child.val()['time']);
         }
       });
       // console.log("getTimesFromDay | \t times", day,  times)
+      n_times = times.length
+      if (limit > 0) {
+        return times.slice(n_times-limit, n_times);
+      }
       return times;
   });
 }
@@ -185,7 +178,7 @@ function getDatesFromDay(day, uid=null) {
   if (uid === null) {
     uid = firebase.auth().currentUser.uid;
   }
-  console.log("getTimesFromDay | uid ", uid)
+  console.log("getDatesFromDay | uid ", uid)
   var newRoot = firebase.database().ref(uid + '/' + day);
 
   return newRoot.once('value').then(function(snapshot){
@@ -221,13 +214,42 @@ function writeDates(uid=null) {
   })
 }
 
+function writeDayAverages(include_checked=true, uid=null) { 
+  var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  var ref = firebase.database()
+  if (uid === null) {
+    uid = firebase.auth().currentUser.uid;
+  }
+  dayPromises = []
+  days.forEach(function(day) {
+    dayPromises.push(getTimesFromDay(day, include_checked, uid, 20));
+  })
+  console.log("writeDayAverages | promises ", dayPromises)
+
+  Promise.all(dayPromises).then(function(data) {
+    data.forEach(function(datarow, i) {
+      day = days[i];
+      times = datarow.map(timeStringToFloat)
+      let count = times.length;
+      times = times.reduce((previous, current) => current += previous);
+      times /= count;
+
+      console.log("writeDayAverages | datarow ", datarow, Math.round(times*100)/100)
+      // TODO: go back from time float to time time 
+      console.log("writeDayAverages | day id " + day + '-average');
+      document.getElementById(day + '-average').textContent = Math.round(times*100)/100
+    })
+  })
+}
+
+
 
 function drawHistogram(include_checked=false) {
   console.log("drawHistogram | beginning")
   var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   day_promises = []
   days.forEach(function(day) {
-    day_promises.push(getTimesFromDay(day, include_checked))
+    day_promises.push(getTimesFromDay(day, include_checked, null, -1))
   }) 
   console.log(day_promises);
   Promise.all(day_promises).then(function(data) {
@@ -258,7 +280,7 @@ function drawBoxplot(include_checked=true) {
   var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   day_promises = []
   days.forEach(function(day) {
-    day_promises.push(getTimesFromDay(day, include_checked))
+    day_promises.push(getTimesFromDay(day, include_checked, null, -1))
   }) 
   console.log(day_promises);
   Promise.all(day_promises).then(function(data) {
@@ -311,7 +333,7 @@ function drawScatterplot(day, include_checked=true) {
     shifted_id_list.push(my_uid)
     user_promises = []
     shifted_id_list.forEach(function(id) {
-      user_promises.push(getTimesFromDay(day, include_checked=include_checked, uid=id, limit=true))
+      user_promises.push(getTimesFromDay(day, include_checked=include_checked, uid=id, limit=10))
     })
     return Promise.all(user_promises)
   }).then(function (user_times) {
@@ -325,9 +347,11 @@ function drawScatterplot(day, include_checked=true) {
           cname = "Me";
           y = .15;
         }
-        times.forEach(function (time) {
-          data.push({'Time': timeStringToFloat(time), 'Type': cname, 'Y': y})
-        })
+        if (times.length > 0) {
+          times.forEach(function (time) {
+            data.push({'Time': timeStringToFloat(time), 'Type': cname, 'Y': y})
+          })
+        }
       })
       console.log('drawScatterPlot | ', data)
       if (data.length > 0){

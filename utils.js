@@ -63,18 +63,20 @@ function timeStringToFloat(time) {
 }
 
 function dict_to_table(scoreDict, checkDict) {
-  var html = '<table style="width:100%">'
-  html += '<tr>'
-  html += '<th>Name</th>'
+  var html = '<table style="width:100%" class="friend_score_table">'
+  html += '<thead>'
+  html += '<tr><th>Name</th>'
   html += '<th>Time</th>' 
   html += '<th>Checks?</th>'
-  html += '</tr>'
+  html += '</tr></thead><tbody>'
 
   for(var uid in scoreDict) {
     html += '<tr>'
     var score = scoreDict[uid]
     var check = checkDict[uid]
-    html += '<td>' + uid + '</td>'
+    var uid_len = uid.length
+    var name = uid.slice(0, uid_len-10)
+    html += '<td>' + name + '</td>'
     html += '<td>' + score + '</td>'
     if (check == 0) {
       html += '<td> no </td>'
@@ -83,7 +85,7 @@ function dict_to_table(scoreDict, checkDict) {
     }
     html += '</tr>'
   }
-  html += '</table>'
+  html += '</tbody></table>'
   return html
 }
 
