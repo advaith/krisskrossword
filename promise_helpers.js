@@ -237,7 +237,7 @@ function writeDayAverages(include_checked=true, uid=null) {
       console.log("writeDayAverages | datarow ", datarow, Math.round(times*100)/100)
       // TODO: go back from time float to time time 
       console.log("writeDayAverages | day id " + day + '-average');
-      document.getElementById(day + '-average').textContent = Math.round(times*100)/100
+      document.getElementById(day + '-average').textContent = timeFloatToString(Math.round(times*100)/100)
     })
   })
 }

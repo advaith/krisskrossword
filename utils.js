@@ -57,9 +57,24 @@ function generate_all_urls(type) {
 
 function timeStringToFloat(time) {
   var minutesSeconds = time.split(/[.:]/);
-  var minutes = parseInt(minutesSeconds[0], 10);
-  var seconds = minutesSeconds[1] ? parseInt(minutesSeconds[1], 10) : 0;
-  return minutes + seconds / 60;
+  if (minutesSeconds.length == 2) {
+    var minutes = parseInt(minutesSeconds[0], 10);
+    var seconds = minutesSeconds[1] ? parseInt(minutesSeconds[1], 10) : 0;
+    return minutes + seconds / 60;
+  } else {
+    var hours = parseInt(minutesSeconds[0])
+    var minutes = parseInt(minutesSeconds[1], 10)
+    var seconds = minutesSeconds[1] ? parseInt(minutesSeconds[1], 10) : 0;
+    return hours*60 + minutes + seconds/60;
+  }
+  
+}
+
+function timeFloatToString(time) {
+  var minutes = Math.floor(time)
+  var seconds = Math.round((time - minutes)*60)
+  console.log("timeFloatToString | minutes seconds", minutes, seconds)
+  return minutes.toString() + ":" + (seconds < 10 ? '0': '') + seconds.toString();
 }
 
 function dict_to_table(scoreDict, checkDict) {
