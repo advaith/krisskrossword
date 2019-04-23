@@ -57,6 +57,26 @@ function getEmailFromId(friendID) {
   })
 };
 
+function checkIdExists(friendEmail) {
+  console.log("checkIdExists | \t beginning FORRR:", friendEmail)
+  var ref = firebase.database()
+  var rootRef = firebase.database().ref('users');
+
+  return rootRef.orderByChild('email').equalTo(friendEmail).once("value").then(function(snapshot) {
+        poss_user_ids = []
+        snapshot.forEach((function(child) {
+          poss_user_ids.push(child.key)
+        })) 
+        console.log("checkIdExists | \t poss_user_ids: ", poss_user_ids)
+        return [poss_user_ids[0]]
+  }).then(function(poss_users) {
+    if (poss_users[0] == null) {
+      return false;
+    }
+    return true;
+  })
+}
+
 
 function getIdFromEmail(friendEmail) {
   console.log("getIdFromEmail | \t beginning FOR MY DEAR FRIEND:", friendEmail)
@@ -123,7 +143,7 @@ function getScoreFromId(friendId, date, day) {
 }
 
 
-function getTimesFromDay(day, include_checked=false, uid=null) { 
+function getTimesFromDay(day, include_checked=false, uid=null, limit=false) { 
   console.log("getTimesFromDay | " + day)
   console.log("getTimesFromDay | uid ", uid)
 
@@ -134,12 +154,25 @@ function getTimesFromDay(day, include_checked=false, uid=null) {
   console.log("getTimesFromDay | uid ", uid)
   var newRoot = firebase.database().ref(uid + '/' + day);
   // var newRoot = rootRef.child(userId);
+  var d = new Date();
+  var m = d.getMonth();
+  var y = d.getYear();
+  var prev_m = (m+12-1) % 12;
   return newRoot.once('value').then(function(snapshot){
       times = [];
       snapshot.forEach(function(_child){
         var friend_name = _child.key;
         if (include_checked || _child.val()['checked'] === 0) {
-          times.push(_child.val()['time']);
+          var curr_m = parseInt(_child['key'][5])
+          var curr_y = parseInt(_child['key'].slice(0, 4)) - 1900
+          if (limit) {
+            // Check if date falls within the last two months
+            if (((curr_m == m) || (curr_m == prev_m)) && (curr_y == y)) {
+              times.push(_child.val()['time']);
+            }
+          } else {
+            times.push(_child.val()['time']);
+          }
         }
       });
       // console.log("getTimesFromDay | \t times", day,  times)
@@ -173,8 +206,9 @@ function drawHistogram(include_checked=false) {
       alltime += data_dicts[i]['Value']
     }
     console.log("drawHistogram | total time: ", alltime)
-    drawHistogramD3(data_dicts)
-
+    if (data_dicts.length > 0) {
+      drawHistogramD3(data_dicts);
+    }
   })
 }
 
@@ -217,8 +251,9 @@ function drawBoxplot(include_checked=true) {
       alltime += groupCounts[i]['Value']
     }
     console.log("drawBoxplot | total time: ", alltime)
-    drawBoxplotD3(groupCounts, globalCounts)
-
+    if (globalCounts.length > 0){
+      drawBoxplotD3(groupCounts, globalCounts);
+    }
   })
 }
 
@@ -236,14 +271,14 @@ function drawScatterplot(day, include_checked=true) {
     shifted_id_list.push(my_uid)
     user_promises = []
     shifted_id_list.forEach(function(id) {
-      user_promises.push(getTimesFromDay(day, include_checked, id))
+      user_promises.push(getTimesFromDay(day, include_checked=include_checked, uid=id, limit=true))
     })
     return Promise.all(user_promises)
   }).then(function (user_times) {
-     console.log("drawScatterplot | user times ", user_times);
-     data = []
-     current_user_idx = user_times.length-1;
-     user_times.forEach(function(times, i) {
+      console.log("drawScatterplot | user times ", user_times);
+      data = []
+      current_user_idx = user_times.length-1;
+      user_times.forEach(function(times, i) {
         cname = "World";
         y = .15;
         if (i === current_user_idx) {
@@ -253,9 +288,11 @@ function drawScatterplot(day, include_checked=true) {
         times.forEach(function (time) {
           data.push({'Time': timeStringToFloat(time), 'Type': cname, 'Y': y})
         })
-     })
-     console.log('drawScatterPlot | ', data)
-     scatterplotD3(data, day)
+      })
+      console.log('drawScatterPlot | ', data)
+      if (data.length > 0){
+        scatterplotD3(data, day);
+      }
   })
   // remove this user's ID, add that as first list of promises, get all day promises for the given day for each of those IDs
   // 

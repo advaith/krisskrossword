@@ -21,12 +21,14 @@ V 0.0
 - bugs
 	[ ] fix the weird scores advaith has reported for times < 1 minute
 		fix = ignore times that are less than 1 minute. if dan feyer can't do it neither can u
+	[ ] figure out neena's install bug
+	[ ] prevent invalid friends - neena is still able to add randos
 
 V 0.1
 - make the leaderboard date a choice
 - automatic scraping of old puzzles solved 
 
-- show a list of all friends
+- show a list of all friends <DONE>
 - prevent invalid friends <DONE>
 - populate crossWORLD!!!! <DONE> 
 
@@ -34,10 +36,4 @@ V 0.1
 - (Eventually) chrome store
 - Integrate with downforacross
 - Potentially shift UI to being on the crossword page itself
-
-
-- Think of name
-- Update repo with name
-- Update variables to reflect new name
-
 

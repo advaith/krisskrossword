@@ -2,7 +2,7 @@ function drawHistogramD3(data) {
 	//SVG setup
 	const margin = {top: 15, right: 15, bottom: 80, left: 15},
 	      width = 350 - margin.left - margin.right,
-	      height = 175 - margin.top - margin.bottom;
+	      height = 240 - margin.top - margin.bottom;
 
 	//x scales
 	//TODO: make the upper most value the minimum between 180 and the max value that exists in the data
@@ -11,7 +11,7 @@ function drawHistogramD3(data) {
 	    .domain([2, 60]);
 
 	//set up svg
-	const svg = d3.select("#you_tab_inner")
+	const svg = d3.select("#histogram_tab_content")
 	  .append("svg")
 	    .attr("width", width + margin.left + margin.right)
 	    .attr("height", height + margin.top + margin.bottom)

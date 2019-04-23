@@ -1,5 +1,5 @@
 function scatterplotD3(data, day) {
-  var margin = {top: 20, right: 20, bottom: 30, left: 40},
+  var margin = {top: 20, right: 20, bottom: 20, left: 40},
       width = 320 - margin.left - margin.right,
       height = 100 - margin.top - margin.bottom;
 
@@ -7,7 +7,7 @@ function scatterplotD3(data, day) {
       .range([0, width]);
 
   var y = d3.scaleLinear()
-      .range([height, 0]);
+      .range([0, height]);
 
   var color = d3.scaleOrdinal(["#0173b2", "#de8f05", "#029e73","#d55e00" , "#cc78bc", "#ca9161", "#fbafe4"]);
 
@@ -41,15 +41,14 @@ function scatterplotD3(data, day) {
         .attr("x", width)
         .attr("y", -6)
         .style("text-anchor", "end")
-        .text("Sepal Width (cm)");
 
     svg.append("text")
         .attr("class", "label")
-        .attr("transform", "rotate(-90)")
         .attr("y", 0)
-        .attr("x", 0)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
+        .attr("x", -height/2)
+        .attr("dy", ".5em")
+        .attr("transform", "rotate(-90)")
+        .style("text-anchor", "middle")
         .text(day.substring(0, 3))
 
 

@@ -14,7 +14,7 @@ function sortNumber(a,b) {
 function drawBoxplotD3(groupCounts=null, globalCounts=null) {
   console.log('running draw boxplot');
   var width = 300;
-  var height = 150;
+  var height = 240;
   var barWidth = 30;
 
   var margin = {top: 20, right: 50, bottom: 20, left: 10};
@@ -66,7 +66,7 @@ function drawBoxplotD3(groupCounts=null, globalCounts=null) {
     .range([0, height]);
 
   // Setup the svg and group we will draw the box plot in
-  var svg = d3.select("#you_tab_inner").append("svg")
+  var svg = d3.select("#boxplot_tab_content").append("svg")
     .attr("width", totalWidth)
     .attr("height", totalheight)
     .append("g")
@@ -186,7 +186,4 @@ function drawBoxplotD3(groupCounts=null, globalCounts=null) {
   axisTopG.append("g")
     .call(axisTop);
 
-} 
-
-drawBoxplotD3();
-  
+}   

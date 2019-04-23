@@ -200,7 +200,8 @@ function getAllData(userID, day, date) {
     // document.getElementById('friend-score-details').textContent = "Friend Scores: " + JSON.stringify(friendScoresDict, null, '  ')
     // + "Friend Checks: " + JSON.stringify(friendChecksDict, null, '  ');
 
-    document.getElementById('world-score-details').innerHTML = niceHtml;
+    // TODO: not sure if we really want a list of everyone's scores in the entire world but it was a nice debugging phase
+    //document.getElementById('world-score-details').innerHTML = niceHtml;
     }
     return friendScores
   }).catch(function (err) {
@@ -219,7 +220,13 @@ function writeUserData(userId, day, date, time, checked) {
 	    time: time,
       checked: checked
   });
-  document.getElementById('my-score-details').textContent = "My Score: " + time + " | Checked Status: " + checked; 
+  console.log("writeUserData | checked val", checked)
+  if (checked == 0) {
+    entry = "💪";
+  } else {
+    entry = "💩";
+  }
+  document.getElementById('my-score-details').textContent = "Time: " + time + " | Checked: " + entry; 
 
   console.log("writeUserData | \tFinished writing user data to firebase");
 }
@@ -228,21 +235,32 @@ function writeUserFriend(userId, friendId) {
   // NOTE - cant save periods so must just use gmail
   console.log("writeUserFriend | beginning")
   friendEmail = friendId + "@gmail.com";
-  idEmailPromises = [getIdFromEmail(friendEmail)];
+  jj = checkIdExists(friendEmail);
+  console.log("writeUserFriend | CHECKIDEXISTS VAL ", jj)
 
-  Promise.all(idEmailPromises).then(function (element) {
-    //console.log("writeUserFriend | beginning: ", element);
-    add_friend_success_text = document.getElementById("add_friend_success")
-    if (element[0] === "invalid friend") {
-      add_friend_success_text.innerHTML = "User does not exist"
-    } else {
-      firebase.database().ref("/friends/" + userId + "/" + friendId).update({
-        value: 1
-      });
-      add_friend_success_text.innerHTML = "Success!";
+  jj.then(function(idexists) {
+    if (idexists) {
+      idEmailPromises = [getIdFromEmail(friendEmail)];
+
+      Promise.all(idEmailPromises).then(function (element) {
+        //console.log("writeUserFriend | beginning: ", element);
+        add_friend_success_text = document.getElementById("add_friend_success")
+        if (element[0] === "invalid friend") {
+          add_friend_success_text.innerHTML = "User does not exist"
+        } else {
+          firebase.database().ref("/friends/" + userId + "/" + friendId).update({
+            value: 1
+          });
+          add_friend_success_text.innerHTML = "Success!";
+        }
+      })  
     }
-    
+    else {
+      add_friend_success_text = document.getElementById("add_friend_success")
+      add_friend_success_text.innerHTML = "user not on extension...but you could change that!";
+    }
   })
+  
 }
 
 
