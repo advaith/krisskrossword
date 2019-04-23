@@ -132,13 +132,14 @@ function eval_page() {
     console.log(url.includes("game"))
     var url_els = url.split('/')
     n_url_els = url_els.length
-    var date_els = url_els.slice(n_url_els-3, n_url_els)
     if (url.includes('game')) {
+      var date_els = url_els.slice(n_url_els-3, n_url_els)
       var date = date_els.join("");
     } else {
       console.log("eval_page | URL does NOT include game");
       var d = new Date();
       var date = yyyymmdd(d);
+      var date_els = date.split("/");
       date = date.split("/").join("");
     }
     
@@ -157,11 +158,11 @@ function eval_page() {
         document.getElementById('my-score-details').textContent = "Today's Time: " + data[date] 
 
         console.log("eval page| d ",date_els[0], date_els[1], date_els[2])
-        d = new Date(date_els[0], date_els[1], date_els[2]);
+        d = new Date(date_els[0], parseInt(date_els[1]-1), date_els[2]);
         console.log("eval page| d ", d);
 
         day = day_dict[d.getDay()]
-        console.log("eval page | ", day)
+        console.log("eval page | calling getFriendsData and getAllData")
         getFriendsData(uid, day, date)
         getAllData(uid, day, date)
       }

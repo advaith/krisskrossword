@@ -111,6 +111,7 @@ function getFriendsData(userID, day, date) {
   var ref = firebase.database()
   var friends = getFriendsFromID(userID)
   var friend_scores = {}
+  var date = date.split("/").join("")
   friends.then(function(friendList) {
     var friendPromises = []
     friendList.forEach(function(friendEmail) { 
@@ -118,10 +119,14 @@ function getFriendsData(userID, day, date) {
     })
     return Promise.all(friendPromises)
   }).then(function(friendIdsList) {
+    console.log("getFriendsData | friendIds", friendIdsList)
+    console.log("getFriendsData | date,day", date, day)
+    console.log("getFriendsData | calling getScoreFromId")
     var friendScorePromises = []
     friendIdsList.forEach(function(friendId) {
       friendScorePromises.push(getScoreFromId(friendId, date, day))
     })
+    // TODO: explain why these next two lines are here
     var friends = getFriendsFromID(userID)
     friendScorePromises.push(friends)
     return Promise.all(friendScorePromises)
@@ -132,8 +137,7 @@ function getFriendsData(userID, day, date) {
       console.log("getFriendsData | \t ya they were null")
       document.getElementById('friend-score-details').textContent = "No friends have reported scores yet!";
     } else {
-    console.log("getFriendsData | \there are the FRIENDSCORES")
-    console.log(friendScores)
+    console.log("getFriendsData | \there are the FRIENDSCORES", friendScores)
     friendScoresDict = {}
     friendChecksDict = {}
     friendNames.forEach((key, i) => friendScoresDict[key] = friendScores[i][0]);
