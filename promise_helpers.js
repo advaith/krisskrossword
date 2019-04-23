@@ -135,7 +135,7 @@ function getScoreFromId(friendId, date, day) {
     console.log("getScoreFromId | \t the snapshot val is:::::::::::")
     console.log("getScoreFromId | \t" + snapshot.val()) //TODO - exception handle here! ! !
     if (snapshot.val() === null) {
-      return ["hasn't finished yet", 0]
+      return ["hasn't finished", 0]
     } else {
     return [snapshot.val()["time"], snapshot.val()["checked"]]
     }

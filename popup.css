@@ -75,3 +75,7 @@ body {
 .bottom_bar a:hover {
 	background: gainsboro;
 }
+
+td {
+	text-align: center;
+}

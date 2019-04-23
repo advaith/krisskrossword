@@ -67,7 +67,7 @@ function dict_to_table(scoreDict, checkDict) {
   html += '<tr>'
   html += '<th>Name</th>'
   html += '<th>Time</th>' 
-  html += '<th>Checked Status</th>'
+  html += '<th>Checks?</th>'
   html += '</tr>'
 
   for(var uid in scoreDict) {
@@ -76,7 +76,11 @@ function dict_to_table(scoreDict, checkDict) {
     var check = checkDict[uid]
     html += '<td>' + uid + '</td>'
     html += '<td>' + score + '</td>'
-    html += '<td>' + check + '</td>'
+    if (check == 0) {
+      html += '<td> no </td>'
+    } else {
+      html += '<td> yes </td>'
+    }
     html += '</tr>'
   }
   html += '</table>'
