@@ -131,14 +131,12 @@ function eval_page() {
   var day_dict = {0: 'Sunday', 1: 'Monday', 2: 'Tuesday', 3:'Wednesday', 4:'Thursday', 5:'Friday', 6:'Saturday'}
   chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
     var url = tabs[0].url;
-    console.log(url.includes("game"))
     var url_els = url.split('/')
     n_url_els = url_els.length
     if (url.includes('game')) {
       var date_els = url_els.slice(n_url_els-3, n_url_els)
       var date = date_els.join("");
     } else {
-      console.log("eval_page | URL does NOT include game");
       var d = new Date();
       var date = yyyymmdd(d);
       var date_els = date.split("/");
@@ -147,7 +145,6 @@ function eval_page() {
     
     obj = {}
     obj[date] = 'undefined'
-    console.log("eval_page | query: ", obj);
     chrome.storage.local.get(obj, function(data) {
       if (data[date] === 'undefined') {
         if (url.includes('game')) {
@@ -156,13 +153,9 @@ function eval_page() {
           looping_interval = setInterval(loop_de_loop, 3 * 1000)
         }
       } else {
-        console.log("eval_page | worked! : ", data);
         document.getElementById('my-score-details').textContent = "Today's Time: " + data[date] 
 
-        console.log("eval page| d ",date_els[0], date_els[1], date_els[2])
         d = new Date(date_els[0], parseInt(date_els[1]-1), date_els[2]);
-        console.log("eval page| d ", d);
-
         day = day_dict[d.getDay()]
         console.log("eval page | calling getFriendsData and getAllData")
         getFriendsData(uid, day, date)
@@ -174,7 +167,7 @@ function eval_page() {
 }
 
 function loop_de_loop() {
-  console.log("loop_de_loop | starting");
+  console.log("continuous loop | call started");
   const scriptToExec = `(${scrapeThePage})()`;
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
      chrome.tabs.executeScript(

@@ -20,7 +20,7 @@ function yyyymmdd(date_obj) {
 
 function generate_all_urls(type) {
 	// Type can be either "daily" or "mini"
-	console.log("generate_all_urls | beginning")
+	console.log("generate_all_urls | call started")
 	var base_url = 'https://www.nytimes.com/crosswords/game/' + type + '/'
 	var current_yr = 1993;
 	var current_mm = 0;
@@ -73,7 +73,6 @@ function timeStringToFloat(time) {
 function timeFloatToString(time) {
   var minutes = Math.floor(time)
   var seconds = Math.round((time - minutes)*60)
-  console.log("timeFloatToString | minutes seconds", minutes, seconds)
   return minutes.toString() + ":" + (seconds < 10 ? '0': '') + seconds.toString();
 }
 

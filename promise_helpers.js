@@ -178,7 +178,6 @@ function getDatesFromDay(day, uid=null) {
   if (uid === null) {
     uid = firebase.auth().currentUser.uid;
   }
-  console.log("getDatesFromDay | uid ", uid)
   var newRoot = firebase.database().ref(uid + '/' + day);
 
   return newRoot.once('value').then(function(snapshot){
@@ -191,6 +190,7 @@ function getDatesFromDay(day, uid=null) {
 }
 
 function writeDates(uid=null) { 
+  console.log("writeDates | call started ")
   var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   var ref = firebase.database()
   if (uid === null) {
@@ -200,7 +200,6 @@ function writeDates(uid=null) {
   days.forEach(function(day) {
     dayPromises.push(getDatesFromDay(day));
   })
-  console.log("writeDates | ", dayPromises)
 
   Promise.all(dayPromises).then(function(data) {
     data.forEach(function(datarow) {
@@ -215,6 +214,8 @@ function writeDates(uid=null) {
 }
 
 function writeDayAverages(include_checked=true, uid=null) { 
+  console.log("writeDayAverages | call started ")
+
   var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   var ref = firebase.database()
   if (uid === null) {
@@ -224,7 +225,6 @@ function writeDayAverages(include_checked=true, uid=null) {
   days.forEach(function(day) {
     dayPromises.push(getTimesFromDay(day, include_checked, uid, 20));
   })
-  console.log("writeDayAverages | promises ", dayPromises)
 
   Promise.all(dayPromises).then(function(data) {
     data.forEach(function(datarow, i) {
@@ -233,10 +233,6 @@ function writeDayAverages(include_checked=true, uid=null) {
       let count = times.length;
       times = times.reduce((previous, current) => current += previous);
       times /= count;
-
-      console.log("writeDayAverages | datarow ", datarow, Math.round(times*100)/100)
-      // TODO: go back from time float to time time 
-      console.log("writeDayAverages | day id " + day + '-average');
       document.getElementById(day + '-average').textContent = timeFloatToString(Math.round(times*100)/100)
     })
   })
@@ -251,7 +247,6 @@ function drawHistogram(include_checked=false) {
   days.forEach(function(day) {
     day_promises.push(getTimesFromDay(day, include_checked, null, -1))
   }) 
-  console.log(day_promises);
   Promise.all(day_promises).then(function(data) {
     // restructure all the data into a list of dictionaries
     // TODO this is where the graphing function should happen, once the data is all resolved
@@ -262,12 +257,10 @@ function drawHistogram(include_checked=false) {
         data_dicts.push({'Name': day, 'Value': timeStringToFloat(time)})
       })
     })
-    console.log("drawHistogram | ", data_dicts);
     alltime = 0
     for(var i=0, l = data_dicts.length; i < l; i++){
       alltime += data_dicts[i]['Value']
     }
-    console.log("drawHistogram | total time: ", alltime)
     if (data_dicts.length > 0) {
       drawHistogramD3(data_dicts);
     }
@@ -275,7 +268,7 @@ function drawHistogram(include_checked=false) {
 }
 
 function drawBoxplot(include_checked=true) {
-  console.log("drawBoxplot | beginning");
+  console.log("drawBoxplot | call started");
   
   var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   day_promises = []
@@ -305,14 +298,11 @@ function drawBoxplot(include_checked=true) {
         groupCounts[day.substring(0, 2)].push(0);
       }
     })
-    console.log("drawBoxplot | ", groupCounts);
-    console.log("drawBoxplot | ", globalCounts);
 
     alltime = 0
     for(var i=0, l = groupCounts.length; i < l; i++){
       alltime += groupCounts[i]['Value']
     }
-    console.log("drawBoxplot | total time: ", alltime)
     if (globalCounts.length > 0){
       drawBoxplotD3(groupCounts, globalCounts);
     }
@@ -326,7 +316,6 @@ function drawScatterplot(day, include_checked=true) {
   var allIds = getAllIds()
   var my_uid = firebase.auth().currentUser.uid;
   allIds.then(function(id_list) {
-    console.log("drawScatterplot | id list ", id_list);
     // Move ID to the end of the list
     shifted_id_list = id_list.slice(0);
     shifted_id_list.splice(shifted_id_list.indexOf(my_uid), 1);
@@ -358,6 +347,4 @@ function drawScatterplot(day, include_checked=true) {
         scatterplotD3(data, day);
       }
   })
-  // remove this user's ID, add that as first list of promises, get all day promises for the given day for each of those IDs
-  // 
 }

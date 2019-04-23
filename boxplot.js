@@ -12,7 +12,7 @@ function sortNumber(a,b) {
 }
 
 function drawBoxplotD3(groupCounts=null, globalCounts=null) {
-  console.log('running draw boxplot');
+  console.log('drawBoxplotD3 | call started');
   var width = 300;
   var height = 220;
   var barWidth = 30;
