@@ -25,11 +25,11 @@
     "manifest_version": 2,
     "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://ajax.googleapis.com https://fonts.googleapis.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
     "oauth2": {
-      "client_id": "115024908254-iq0458o0l7r2lg7oktabjel0of11rlcq.apps.googleusercontent.com",
+      "client_id": "115024908254-njnttmet3hhan7igj4lvhpb7didm7vv4.apps.googleusercontent.com",
       "scopes": [
         "https://www.googleapis.com/auth/userinfo.email",
         "https://www.googleapis.com/auth/userinfo.profile"
       ]
     },
-    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoasG3hPWu2vnulDC/AsWc+u7tQ81dyzwzEEdmAhgb4Nm8M3tl5aWb7nsuzqh8wmLqLe4afXbP+I5ISQaHSruk37cOzx69kG1+pm+D35445xERZh+d8DQYT3JNnNINz0QNTVMHkqTjefcKY7gsdmjpQQJRgCg/bsWUyuxDssjZxiHFunoAvy0eV7gYYovc7MiP8HiYn8/lMKI+/4KfGDG0CnozSsTjbDxofNtwmrmKrcrxY+5sL2Rb5YLXR1znObFelBFuLmymjUpZzsNH5OrMAV4O8UPzJQ379hoUiFLahEEeZCY+UBFgi9shg2rN+JC9pK+63scw1bZhDQQkKZHpQIDAQAB"
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhiOcpO0dHm8rIplradC7Ia1WjHgzYVNh5zwmLTfVYeBxKAWv60zaHcnhSaPb2WLwseyBFPqUdFl3TYNiZoN6It7trPsi+cLIMsyPc0QLKVJhad2V/1zWlHvNeAQC33yfPN4bKjwrXihdZVnxWJpeLxdjZDksDgmmg3ZVM/3EXb7BP4CRNWFsW71lL1aaDKqdL6NOVL5YBdrVjKPbX7d4KGdksLOvngZbCXWfpoTPBPrxq//vMmEGKkqFuFGugZWsbRdYV2ah2VpnNP0C+A1N2IBZujaq4dwkwmgfyzEZwtlan3EFJCiUSntOSnhD0yf21ApS0cQNE6CJ0TTv6IjbZwIDAQAB"
 }
