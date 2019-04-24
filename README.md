@@ -2,8 +2,8 @@
 
 hello - you've found a chrome extension for sharing your nytimes crossword stats with friends (and the world!)
 
-"you"          |  "friends"			| "world"
-:-------------------------:|:-------------------------:|:---------------
+"you"          |  "friends"			| 	"world"
+:-------------------------:|:-------------------------:|:---------------: |
 ![](./1.png)  |  ![](./2.png) | ![](./3.png)
 
 ## what the
