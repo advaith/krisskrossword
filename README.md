@@ -1,5 +1,9 @@
 hello - you've found a chrome extension for sharing your nytimes crossword stats with friends (and the world!)
 
+Solarized dark             |  Solarized Ocean			| asdhf
+:-------------------------:|:-------------------------:|:---------------
+![](./1.png)  |  ![](./2.png) | ![](./3.png)
+
 # to add friends
 you can add friends but going to the friends tab, entering their gmail username in the text field, and hitting submit. text should appear below the box to tell you whether your friend addition was successful. there are a few reasons for failure:
 	- you're entering their full email! drop the '@gmail.com' and try again
