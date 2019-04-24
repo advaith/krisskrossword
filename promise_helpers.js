@@ -167,7 +167,8 @@ function getTimesFromDay(day, include_checked=false, uid=null, limit=20) {
       // console.log("getTimesFromDay | \t times", day,  times)
       n_times = times.length
       if (limit > 0) {
-        return times.slice(n_times-limit, n_times);
+        subtract_amt = Math.min(n_times, limit)
+        return times.slice(n_times-subtract_amt, n_times);
       }
       return times;
   });
