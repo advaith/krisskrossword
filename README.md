@@ -24,7 +24,6 @@ this shows three scatter plots, showing the distribution of times for each day o
 
 
 ## to add friends
->>>>>>> fedd9e82b1e447949675d21d088b345db50582d4
 you can add friends but going to the friends tab, entering their gmail username in the text field, and hitting submit. text should appear below the box to tell you whether your friend addition was successful. there are a few reasons for failure:
 	- you're entering their full email! drop the '@gmail.com' and try again
 	- they're not on the extension yet and you should urge them to join
