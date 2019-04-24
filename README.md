@@ -16,7 +16,7 @@ the you tab summarizes your crossword stats. the table at the top displays the a
 
 "friends"
 
-the friends tab lists your friends' scores for today's crossword (or the crossword you're viewing at the moment). you'll be able to see your friends' scores once you complete a crossword. you can also see whether or not they used checks 😈
+the friends tab lists your friends' scores for today's crossword (or the crossword you're viewing at the moment). you'll be able to see your friends' scores once you complete a crossword. you can also see if they used checks 😈
 
 "world"
 
