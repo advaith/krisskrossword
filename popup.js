@@ -70,10 +70,30 @@ function scrape_url(urls) {
   });
 }
 
+function getUrlDate(url) {
+  url_els = url.split('/')
+  n_url_els = url_els.length;
+  date_path = url_els.splice(n_url_els-3, n_url_els).join('')
+  return date_path
+}
+
 function scrape_all_scores() {
-  var allUrls = generate_all_urls('daily');
-  console.log("scrape_all_scores | starting ", allUrls);
-  scrape_url(allUrls);
+  chrome.storage.local.get(null, function(data) {
+    stored_keys = Object.keys(data);
+    var allUrls = generate_all_urls('daily');
+    req_keys = allUrls.map(getUrlDate)
+    console.log("scrape_all_scores | all keys", stored_keys)
+    console.log("scrape_all_scores | all keys", req_keys)
+
+    filteredUrls = []
+    req_keys.forEach(function(req_key, i) {
+      if (!stored_keys.includes(req_key)) {
+        filteredUrls.push(allUrls[i]);
+      }
+    })
+    console.log("scrape_all_scores | ", filteredUrls)
+    scrape_url(filteredUrls)
+  })
 }
 
 // Background message listener
@@ -214,7 +234,7 @@ function writeUserData(userId, day, date, time, checked) {
   });
   obj = {};
   obj[date_path] = time;
-  chrome.local.storage.set(obj);
+  //chrome.local.storage.set(obj);
   console.log("writeUserData | checked val", checked)
   // TODO: would involve storing an extra piece of info in chrome local storage to stop from polling
   // if (checked == 0) {
