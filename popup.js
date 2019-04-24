@@ -101,7 +101,12 @@ function scrape_all_scores() {
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     var uid = firebase.auth().currentUser.uid;
     var name = firebase.auth().currentUser.displayName;
-    writeUserData(uid, message['day'], message['date'], message['time'], message['checked']);
+    // Check for outlier times and don't write them in the database
+    if ((timeStringToFloat(message['time']) > 1.0) && (timeStringToFloat(message['time'] <= 180))){
+      writeUserData(uid, message['day'], message['date'], message['time'], message['checked']);
+    } else {
+      console.log("chrome listener | time is too small or too large")
+    }
     getFriendsData(uid, message['day'], message['date'])
     getAllData(uid, message['day'], message['date'])
 });
