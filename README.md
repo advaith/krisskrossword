@@ -25,9 +25,9 @@ this shows three scatter plots, showing the distribution of times for each day o
 
 ## to add friends
 you can add friends but going to the friends tab, entering their gmail username in the text field, and hitting submit. text should appear below the box to tell you whether your friend addition was successful. there are a few reasons for failure:
-	- you're entering their full email! drop the '@gmail.com' and try again
-	- they're not on the extension yet and you should urge them to join
-	- there is a bug (likely) and we'd love to hear about it ! email us at nytimed.app@gmail.com
+* you're entering their full email! drop the '@gmail.com' and try again
+* they're not on the extension yet and you should urge them to join
+* there is a bug (likely) and we'd love to hear about it ! email us at nytimed.app@gmail.com
 
 ## to scrape old scores
 click the 'scrape' button in the you tab. because of the way chrome extensions work, you can't close the tab or outside of the pop-up during the scrape. what you can do is move the tab to a separate desktop and let it run - it takes around 20 minutes to scrape one year of crosswords. 
