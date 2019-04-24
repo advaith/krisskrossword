@@ -39,6 +39,9 @@ exiting the process won't hurt you - starting the scrape back up later will skip
 does this work with mobile?
 not real-time :( if you navigate to desktop and rescrape, it'll grab all your scores
 
+seeing weird times recored - either super small or large?
+this is a bug we've found with the nyt crossword webapp but hopefully we'll resolve it soon
+
 i don't have any friends?
 add divyashan and advaithanand10 ! we're friendly 
 
