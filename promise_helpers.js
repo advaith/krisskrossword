@@ -231,8 +231,13 @@ function writeDayAverages(include_checked=true, uid=null) {
       day = days[i];
       times = datarow.map(timeStringToFloat)
       let count = times.length;
-      times = times.reduce((previous, current) => current += previous);
-      times /= count;
+      if (count == 0) {
+        times = "n/a"
+      } else {
+        times = times.reduce((previous, current) => current += previous);
+        times /= count;
+        entry = timeFloatToString(Math.round(times*100)/100)
+      }
       document.getElementById(day + '-average').textContent = timeFloatToString(Math.round(times*100)/100)
     })
   })
