@@ -127,6 +127,7 @@ window.onload = function() {
 };
 
 function eval_page() {
+  console.log('eval_page | beginning')
   var uid = firebase.auth().currentUser.uid;
   var day_dict = {0: 'Sunday', 1: 'Monday', 2: 'Tuesday', 3:'Wednesday', 4:'Thursday', 5:'Friday', 6:'Saturday'}
   chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {

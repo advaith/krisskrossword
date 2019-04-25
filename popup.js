@@ -269,8 +269,9 @@ function writeUserFriend(userId, friendId) {
         if (element[0] === "invalid friend") {
           add_friend_success_text.innerHTML = "User does not exist"
         } else {
-          firebase.database().ref("/friends/" + userId + "/" + friendId).update({
-            value: 1
+          friendNodeId = friendId.replace(".","")
+          firebase.database().ref("/friends/" + userId + "/" + friendNodeId).update({
+            value: friendId
           });
           add_friend_success_text.innerHTML = "Success!";
         }

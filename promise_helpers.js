@@ -119,6 +119,7 @@ function getFriendsFromID(userId) {
       friends = [];
       snapshot.forEach(function(_child){
           var friend_name = _child.key;
+          console.log('getFriendsFromId | ', _child.val())
           friends.push(friend_name + "@gmail.com");
       });
       return friends;
