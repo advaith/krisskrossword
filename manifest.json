@@ -1,6 +1,6 @@
 {
     "name": "nyTimed",
-    "version": "2.1 ",
+    "version": "2.1",
     "description": "Compare NYTimes Crossword Scores",
     "permissions": ["activeTab", "declarativeContent", "storage", "identity"],
     "background": {
